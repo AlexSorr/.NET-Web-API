@@ -5,3 +5,4 @@ TestWebAPI/Migrations/
 
 Dockerfile
 insert test data.sql
+.DS_Store
