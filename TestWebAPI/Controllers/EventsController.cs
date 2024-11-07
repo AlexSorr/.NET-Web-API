@@ -6,6 +6,7 @@ using Models;
 [Route("api/[controller]")]
 [ApiController]
 public class EventsController : ControllerBase {
+
     private readonly ApplicationDbContext _context;
 
     public EventsController(ApplicationDbContext context) { _context = context; }
@@ -25,10 +26,8 @@ public class EventsController : ControllerBase {
     // Чтение одного события по Id
     [HttpGet("{id}")]
     public async Task<ActionResult<Event>> GetEvent(long id) {
-        var eventData = await _context.Events.FindAsync(id);
-        if (eventData == null)
-            return NotFound();
-        return eventData == null ? NotFound() : eventData;
+        Event? eventData = await _context.Events.FindAsync(id);
+        return eventData == null ? NotFound() : Ok(eventData);
     }
 
     // Обновление события
@@ -54,7 +53,7 @@ public class EventsController : ControllerBase {
     // Удаление события
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEvent(long id) {
-        var eventData = await _context.Events.FindAsync(id);
+        Event? eventData = await _context.Events.FindAsync(id);
         if (eventData == null)
             return NotFound();
         

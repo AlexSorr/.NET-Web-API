@@ -19,7 +19,6 @@ if (app.Environment.IsDevelopment()) {
 
 app.Run();
 
-
 // Метод ConfigureServices для добавления сервисов
 void ConfigureServices(IServiceCollection services, IConfiguration configuration) {
     services.AddDbContext<ApplicationDbContext>(options =>

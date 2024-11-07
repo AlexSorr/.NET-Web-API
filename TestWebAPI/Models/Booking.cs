@@ -1,14 +1,17 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Models;
 
-public class Booking : IEntity {
-     
-    public long Id { get; }
+public class Booking : Entity {
 
-    
-    public Event Event { get; set; } =  new Event();
-    public long EventId { get => Event?.Id ?? 0; }
+    [Column("Event")]
+    public Event Event { get; set; } = new Event();
 
+    [Column("NumberOfTickets")]
     public int NumberOfTickets { get; set; }
+
+    [Column("BookingDate")]
     public DateTime BookingDate { get; set; }
 
 }
