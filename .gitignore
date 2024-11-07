@@ -1,4 +1,7 @@
-bin/
-obj/
-.vs/
-Migrations/
+TestWebAPI/bin/
+TestWebAPI/obj/
+TestWebAPI/.vs/
+TestWebAPI/Migrations/
+
+Dockerfile
+insert test data.sql
