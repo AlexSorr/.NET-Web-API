@@ -18,39 +18,46 @@ public class EventsController : APIBaseController {
         return CreatedAtAction(nameof(GetEvent), new { id = eventData.Id }, eventData);
     }
 
-    // Чтение всех событий
+    /// <summary>
+    /// Получить все мероприятия
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Event>>> GetEvents() => await _context.Events.ToListAsync();
 
 
-    // Чтение одного события по Id
+    /// <summary>
+    /// Поиск события по id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("{id}")]
     public async Task<ActionResult<Event>> GetEvent(long id) {
         Event? eventData = await _context.Events.FindAsync(id);
-        return eventData == null ? NotFound() : Ok(eventData);
+        return eventData == null ? NotFound($"Event with id {id} not exists") : Ok(eventData);
     }
 
 
     // Обновление события
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateEvent(long id, Event eventData) {
+    // [HttpPut("{id}")]
+    // public async Task<IActionResult> UpdateEvent(long id, Event eventData) {
 
-        if (!EventExists(id))
-            return NotFound($"Event id: {id} not found!");
+    //     if (!EventExists(id))
+    //         return NotFound($"Event id: {id} not found!");
 
-        if (id != eventData.Id) 
-            return BadRequest($"Can't match event {id} with event {eventData.Id}");
+    //     if (id != eventData.Id) 
+    //         return BadRequest($"Can't match event {id} with event {eventData.Id}");
         
-        _context.Entry(eventData).State = EntityState.Modified;
+    //     _context.Entry(eventData).State = EntityState.Modified;
 
-        try {
-            await _context.SaveChangesAsync();
-        } catch (DbUpdateConcurrencyException ex) {
-            _logger.LogError(ex.ToString());
-        }
+    //     try {
+    //         await _context.SaveChangesAsync();
+    //     } catch (DbUpdateConcurrencyException ex) {
+    //         _logger.LogError(ex.ToString());
+    //     }
 
-        return NoContent();
-    }
+    //     return NoContent();
+    // }
 
 
     // Удаление события
@@ -65,8 +72,5 @@ public class EventsController : APIBaseController {
 
         return NoContent();
     }
-
-
-    private bool EventExists(long id) => _context.Events.Any(e => e.Id == id);
 
 }

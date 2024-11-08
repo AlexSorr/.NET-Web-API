@@ -19,4 +19,10 @@ echo -n "Creating migration $migration_name"
 
 # Добавить миграцию, обновить БД
 dotnet ef migrations add "$migration_name"
+
+if [ $? -ne 0 ]; then
+    echo "Creating migration error, abort"
+    exit 1
+fi
+
 dotnet ef database update
