@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,14 +12,10 @@ Action<HostBuilderContext, IServiceProvider, LoggerConfiguration> configureLoggi
 };
 builder.Host.UseSerilog(configureLogging);
 
-// Вызов метода ConfigureServices для добавления зависимостей
 ConfigureServices(builder.Services, builder.Configuration);
 
-// Добавление эндпоинтов и конфигурации для Swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 var app = builder.Build();
+
 app.MapControllers();
 
 // Конфигурация пайплайна HTTP запросов
@@ -31,11 +26,11 @@ if (app.Environment.IsDevelopment()) {
 
 app.Run();
 
-// Метод ConfigureServices для добавления сервисов
+// Добавление сервисов
 void ConfigureServices(IServiceCollection services, IConfiguration configuration) {
     services.AddDbContext<ApplicationDbContext>(options =>
         options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
     services.AddControllers();
-    services.AddEndpointsApiExplorer();
+    services.AddEndpointsApiExplorer(); // Добавление эндпоинтов и конфигурации для Swagger
     services.AddSwaggerGen();
 }
