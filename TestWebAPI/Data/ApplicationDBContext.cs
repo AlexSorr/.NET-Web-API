@@ -12,11 +12,14 @@ public class ApplicationDbContext : DbContext {
     // Начальная загрузка данных
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
 
-        base.OnModelCreating(modelBuilder);
+        //Не используем кавычки, чтобы имена таблиц в БД были нечувствительны к регистру
+        modelBuilder.UseCollation("C");
 
-        // Указываем первичные ключи
+        // Указываем первичные ключи //8.11 - а че если перед базой их поставить?
         modelBuilder.Entity<Event>().HasKey(e => e.Id);
         modelBuilder.Entity<Booking>().HasKey(b => b.Id);
+
+        base.OnModelCreating(modelBuilder);
 
     }
 
