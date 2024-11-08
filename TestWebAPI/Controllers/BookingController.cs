@@ -1,33 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Models;
+
+using API.Models;
+using API.Controllers.Base;
+namespace API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class BookingsController : ControllerBase {
+public class BookingsController : APIBaseController {
 
-    private readonly ApplicationDbContext _context;
-
-    private readonly ILogger<BookingsController> _logger;
-
-    private readonly DataLoader _dataLoader;
-
-    public BookingsController(ApplicationDbContext context, ILogger<BookingsController> logger, DataLoader dataLoader) {
-        _context = context;
-        _logger = logger;
-        _dataLoader = dataLoader;
-    } 
-
-    [HttpPost("upload_from_file")]
-    public async Task<IActionResult> UploadFromFile([FromForm] IFormFile file) {
-        try {
-            await _dataLoader.UploadDataFromFileAsync<Booking>(file);
-            return Ok("Data uploaded");
-        } catch (Exception ex) {
-            _logger.LogError(ex.ToString());
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    public BookingsController(ApplicationDbContext context, ILogger<BookingsController> logger) : base(context, logger) { } 
 
     // GET: api/Bookings
     [HttpGet]

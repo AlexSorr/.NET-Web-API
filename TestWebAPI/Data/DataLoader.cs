@@ -1,14 +1,11 @@
 using Newtonsoft.Json;
 
+namespace API.Data;
+
 public class DataLoader {
+
     private readonly ApplicationDbContext _context;
-
-    private readonly ILogger<DataLoader> _logger;
-
-    public DataLoader(ApplicationDbContext context, ILogger<DataLoader> logger) {
-        _context = context;
-        _logger = logger;
-    }
+    public DataLoader(ApplicationDbContext context) { _context = context; }
 
     /// <summary>
     /// Залить сущности в БД
@@ -38,5 +35,7 @@ public class DataLoader {
             await UploadDataAsync<T>(objects);
         }
     }
+
+    
 
 }

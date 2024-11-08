@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Models;
+using API.Models;
 
 public class ApplicationDbContext : DbContext {
     

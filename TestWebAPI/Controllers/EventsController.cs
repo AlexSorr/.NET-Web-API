@@ -1,20 +1,14 @@
+using API.Controllers.Base;
+using API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-using Models;
 
 [Route("api/[controller]")]
 [ApiController]
-public class EventsController : ControllerBase {
+public class EventsController : APIBaseController {
 
-    private readonly ApplicationDbContext _context;
-
-    private readonly ILogger<EventsController> _logger;
-
-    public EventsController(ApplicationDbContext context, ILogger<EventsController> logger) { 
-        _context = context; 
-        _logger = logger;
-    }
+    public EventsController(ApplicationDbContext context, ILogger<EventsController> logger): base(context, logger) { }
 
     // Создание события
     [HttpPost]

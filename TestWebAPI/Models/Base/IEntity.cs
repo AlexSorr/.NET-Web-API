@@ -1,4 +1,4 @@
-namespace Models.Base;
+namespace API.Models.Base;
 
 public interface IEntity {
 

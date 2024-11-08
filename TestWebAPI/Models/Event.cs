@@ -1,6 +1,6 @@
-using Models.Base;
+using API.Models.Base;
 
-namespace Models;
+namespace API.Models;
 
 public class Event : Entity {
 

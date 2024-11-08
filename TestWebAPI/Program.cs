@@ -35,5 +35,5 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
     services.AddSwaggerGen();
 
     //загрузчик данных
-    services.AddTransient<DataLoader>();
+    services.AddTransient<API.Data.DataLoader>();
 }
