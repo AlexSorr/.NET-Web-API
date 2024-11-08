@@ -1,0 +1,42 @@
+using Newtonsoft.Json;
+
+public class DataLoader {
+    private readonly ApplicationDbContext _context;
+
+    private readonly ILogger<DataLoader> _logger;
+
+    public DataLoader(ApplicationDbContext context, ILogger<DataLoader> logger) {
+        _context = context;
+        _logger = logger;
+    }
+
+    /// <summary>
+    /// Залить сущности в БД
+    /// </summary>
+    /// <typeparam name="T">Тип сущности</typeparam>
+    /// <param name="data">Список сущностей</param>
+    /// <returns></returns>
+    public async Task UploadDataAsync<T>(IEnumerable<T> data) where T : class {
+        if (data == null || !data.Any()) return;
+
+        await _context.Set<T>().AddRangeAsync(data);
+        await _context.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Загрузить данные из файла
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="file"></param>
+    /// <returns></returns>
+    public async Task UploadDataFromFileAsync<T>(IFormFile file) where T : class {
+        if (file == null || file.Length == 0) return;
+
+        using (StreamReader reader = new StreamReader(file.OpenReadStream())) {
+            string jsonContent = await reader.ReadToEndAsync() ?? string.Empty;
+            IEnumerable<T> objects = JsonConvert.DeserializeObject<IEnumerable<T>>(jsonContent) ?? Enumerable.Empty<T>();
+            await UploadDataAsync<T>(objects);
+        }
+    }
+
+}

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
-using Microsoft.AspNetCore.Http;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -11,10 +10,24 @@ public class BookingsController : ControllerBase {
 
     private readonly ILogger<BookingsController> _logger;
 
-    public BookingsController(ApplicationDbContext context, ILogger<BookingsController> logger) {
+    private readonly DataLoader _dataLoader;
+
+    public BookingsController(ApplicationDbContext context, ILogger<BookingsController> logger, DataLoader dataLoader) {
         _context = context;
         _logger = logger;
+        _dataLoader = dataLoader;
     } 
+
+    [HttpPost("upload_from_file")]
+    public async Task<IActionResult> UploadFromFile([FromForm] IFormFile file) {
+        try {
+            await _dataLoader.UploadDataFromFileAsync<Booking>(file);
+            return Ok("Data uploaded");
+        } catch (Exception ex) {
+            _logger.LogError(ex.ToString());
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
 
     // GET: api/Bookings
     [HttpGet]
@@ -47,8 +60,11 @@ public class BookingsController : ControllerBase {
         if (!_context.Bookings.Any(b => b.Id == id)) 
             return NotFound();
 
-        if (id != booking.Id)
+        if (id != booking.Id) {
+            _logger.LogError($"Requested Id: {id}; sended booking id: {booking?.Id}");
             return BadRequest();
+        }
+            
         
         _context.Entry(booking).State = EntityState.Modified;
 

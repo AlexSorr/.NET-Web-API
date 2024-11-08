@@ -10,16 +10,17 @@ public class ApplicationDbContext : DbContext {
 
     public DbSet<Event> Events { get; set; }
     public DbSet<Booking> Bookings { get; set; }
+    public DbSet<Location> Locations { get; set; }  
 
     // Начальная загрузка данных
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
 
-        //Не используем кавычки, чтобы имена таблиц в БД были нечувствительны к регистру
-        modelBuilder.UseCollation("C");
-
-        // Указываем первичные ключи //8.11 - а че если перед базой их поставить?
+        base.OnModelCreating(modelBuilder);
+        
+        // Указываем первичные ключи
         modelBuilder.Entity<Event>().HasKey(e => e.Id);
         modelBuilder.Entity<Booking>().HasKey(b => b.Id);
+        modelBuilder.Entity<Location>().HasKey(l => l.Id);
 
         // приводим имена колонок и таблиц к нижнему регистру без кавычек
         foreach (IMutableEntityType entity in modelBuilder.Model.GetEntityTypes()){
@@ -30,13 +31,12 @@ public class ApplicationDbContext : DbContext {
                 continue;
             }
             entity.SetTableName(tableName.ToLowerInvariant());
-
             foreach (IMutableProperty property in entity.GetProperties())
                 property.SetColumnName(property.Name.ToLowerInvariant());
             
         }
         
-        base.OnModelCreating(modelBuilder);
+        
     }
 
 }

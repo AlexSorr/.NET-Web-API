@@ -33,4 +33,7 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
     services.AddControllers();
     services.AddEndpointsApiExplorer(); // Добавление эндпоинтов и конфигурации для Swagger
     services.AddSwaggerGen();
+
+    //загрузчик данных
+    services.AddTransient<DataLoader>();
 }

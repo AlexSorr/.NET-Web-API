@@ -60,7 +60,6 @@ public class EventsController : ControllerBase {
 
 
     // Удаление события
-    //работакт
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEvent(long id) {
         Event? eventData = await _context.Events.FindAsync(id);
