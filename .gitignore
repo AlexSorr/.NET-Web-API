@@ -2,10 +2,9 @@ TestWebAPI/bin/
 TestWebAPI/obj/
 TestWebAPI/.vs/
 TestWebAPI/Migrations/
+TestWebAPI/Logs/
+
 
 Dockerfile
-insert test data.sql
 .DS_Store
-TestWebAPI/Logs/api_log20241108.txt
 TestWebAPI/.DS_Store
-.gitignore
