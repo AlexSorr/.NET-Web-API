@@ -1,4 +1,5 @@
 
+using System.Net.Http.Headers;
 using API.Models.Base;
 
 namespace API.Models;
@@ -7,23 +8,65 @@ public class Ticket : Entity {
 
     public Ticket () { }
     
+    /// <summary>
+    /// Номер билета
+    /// Надо как-то генерить при создании
+    /// </summary>
     public string Number { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Мероприятие
+    /// </summary>
     public Event Event { get; set; } = new Event();
 
+    /// <summary>
+    /// Дата мероприятия
+    /// </summary>
     public DateTime EventDate => this.Event?.Date ?? DateTime.MinValue; 
 
     /// <summary>
-    /// Бронирование
+    /// Бронирование и продажа
     /// </summary>
-    private bool _is_booked = false;
-    public DateTime BookingDate { get; private set; }
-    public bool IsBooked { 
-        get => _is_booked; 
+    private BookingStatus _bookingStatus;
+    public BookingStatus BookingStatus { 
+        get => _bookingStatus; 
         set {
-            DateTime bookingDate = value ? DateTime.Now : DateTime.MinValue;
-            _is_booked = value; BookingDate = bookingDate;
+            _bookingStatus = value;
+            switch (_bookingStatus) {
+                case BookingStatus.Free:
+                    this.BookingDate = DateTime.MinValue;
+                    this.SellingDate = DateTime.MinValue;
+                    break;
+                case BookingStatus.Booked:
+                    this.BookingDate = DateTime.Now;
+                    this.SellingDate = DateTime.MinValue;
+                    break;
+                case BookingStatus.Selled:
+                    this.SellingDate = DateTime.Now;
+                    break;
+                default: break;
+            }
         }
     }
+
+    /// <summary>
+    /// Дата бронирования
+    /// </summary>
+    public DateTime BookingDate { get; private set; }
+
+    /// <summary>
+    /// Дата продажи
+    /// </summary>
+    public DateTime SellingDate {get; private set; }
+    
+    /// <summary>
+    /// Зарезервирован
+    /// </summary>
+    public bool IsBooked => this.BookingStatus == BookingStatus.Booked;
+
+    /// <summary>
+    /// Продан
+    /// </summary>
+    public bool IsSelled => this.BookingStatus == BookingStatus.Selled;
 
 }

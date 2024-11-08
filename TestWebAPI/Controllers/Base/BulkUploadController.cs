@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using API.Data;
+
+
 namespace API.Controllers.Base;
 
 /// <summary>
@@ -37,9 +39,9 @@ public abstract class BulkUploadController<T> : APIBaseController, IBulkUploadCo
     /// <param name="locations"></param>
     /// <returns></returns>
     [HttpPost("load/from_request")]
-    public async Task<IActionResult> UploadFromRequest([FromBody] IEnumerable<T> locations) {
+    public async Task<IActionResult> UploadFromRequest([FromBody] IEnumerable<T> objects) {
         try {
-            await _dataLoader.UploadDataAsync<T>(locations);
+            await _dataLoader.UploadDataAsync<T>(objects);
             return Ok("Data uploaded");
         } catch (Exception ex) {
             _logger.LogError("Error data loading\n" + ex.ToString());
