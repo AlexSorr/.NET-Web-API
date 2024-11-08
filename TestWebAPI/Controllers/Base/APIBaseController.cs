@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.Base;
 
+[Route("api/[controller]")]
 public abstract class APIBaseController : ControllerBase {
 
     protected readonly ApplicationDbContext _context;

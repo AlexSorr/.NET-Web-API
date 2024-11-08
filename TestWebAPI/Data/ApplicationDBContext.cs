@@ -15,7 +15,7 @@ public class ApplicationDbContext : DbContext {
     public DbSet<Location> Locations { get; set; }  
     public DbSet<Ticket> Tickets { get; set; }
 
-    // Начальная загрузка данных
+
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
 
         base.OnModelCreating(modelBuilder);

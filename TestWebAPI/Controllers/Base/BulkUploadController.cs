@@ -9,6 +9,7 @@ namespace API.Controllers.Base;
 /// Справочники, все дела
 /// </summary>
 /// <typeparam name="T">Тип сущности</typeparam>
+[Route("api/[controller]")]
 public abstract class BulkUploadController<T> : APIBaseController, IBulkUploadController<T> where T : class {
 
     protected DataLoader _dataLoader;
@@ -22,16 +23,16 @@ public abstract class BulkUploadController<T> : APIBaseController, IBulkUploadCo
     /// </summary>
     /// <param name="file"></param>
     /// <returns></returns>
-    [HttpPost("load/from_file")]
-    public async Task<IActionResult> UploadFromFile([FromForm] IFormFile file) {
-        try {
-            await _dataLoader.UploadDataFromFileAsync<T>(file);
-            return Ok("Data uploaded");
-        } catch (Exception ex) {
-            _logger.LogError(ex.ToString());
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    // [HttpPost("load/from_file")]
+    // public async Task<IActionResult> UploadFromFile([FromForm] IFormFile file) {
+    //     try {
+    //         await _dataLoader.UploadDataFromFileAsync<T>(file);
+    //         return Ok("Data uploaded");
+    //     } catch (Exception ex) {
+    //         _logger.LogError(ex.ToString());
+    //         return StatusCode(500, $"Internal server error: {ex.Message}");
+    //     }
+    // }
 
     /// <summary>
     /// Добавление сущностей по реквесту

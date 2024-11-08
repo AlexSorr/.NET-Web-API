@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Serilog;
+
+using API.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,13 +19,13 @@ ConfigureServices(builder.Services, builder.Configuration);
 
 var app = builder.Build();
 
-app.MapControllers();
-
 // Конфигурация пайплайна HTTP запросов
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapControllers();
 
 app.Run();
 
@@ -33,7 +36,9 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
     services.AddControllers();
     services.AddEndpointsApiExplorer(); // Добавление эндпоинтов и конфигурации для Swagger
     services.AddSwaggerGen();
+    //services.AddSwaggerGen(c => c.MapType<IFormFile>(() => new OpenApiSchema { Type = "string", Format = "binary" }));
 
     //загрузчик данных
-    services.AddTransient<API.Data.DataLoader>();
+    services.AddTransient<DataLoader>();
 }
+

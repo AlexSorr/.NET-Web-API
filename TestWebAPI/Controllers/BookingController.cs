@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 using API.Models;
 using API.Controllers.Base;
-namespace API.Controllers;
+
 
 [Route("api/[controller]")]
 [ApiController]
