@@ -8,9 +8,11 @@ public class Event : Entity {
 
     public string Name { get; set; } = string.Empty;
 
-    public Location Location { get; set; } = new Location();
+    public virtual Location Location { get; set; } = new Location();
 
     public DateTime Date { get; set; }
+
+    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
     
     /// <summary>
     /// Вот это можно не хранить в базе, а рассчитывать количество незабронированных билетов 

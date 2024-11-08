@@ -23,6 +23,9 @@ public class ApplicationDbContext : DbContext {
         // Указываем первичные ключи
         ApplyEntityKeyConfiguration(modelBuilder);
 
+        //Настраиваем внешние ключи
+        ApplyForeignKeyConfiguration(modelBuilder);
+
         // Приводим имена колонок и таблиц к нижнему регистру без кавычек
         SetDbObjectNamesLowerInvariantCase(modelBuilder);
 
@@ -35,6 +38,14 @@ public class ApplicationDbContext : DbContext {
         IEnumerable<Type> types = Assembly.GetExecutingAssembly().GetTypes().Where(t => typeof(IEntity).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
         foreach (Type type in types) 
             modelBuilder.Entity(type).HasKey("Id");
+    }
+
+    /// <summary>
+    /// Применить конфигурацию к внешним ключам
+    /// </summary>
+    private void ApplyForeignKeyConfiguration(ModelBuilder modelBuilder) {
+        //связь
+        modelBuilder.Entity<Event>().HasMany(e => e.Tickets).WithOne(t => t.Event).HasForeignKey("EventId");
     }
 
     /// <summary>

@@ -4,7 +4,7 @@ namespace API.Models;
 
 public class Booking : Entity {
 
-    public Event Event { get; set; } = new Event();
+    public virtual Event Event { get; set; } = new Event();
 
     public int NumberOfTickets { get; set; }
 
