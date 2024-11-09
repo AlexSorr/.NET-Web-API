@@ -44,8 +44,8 @@ public class ApplicationDbContext : DbContext {
     /// Применить конфигурацию к внешним ключам
     /// </summary>
     private void ApplyForeignKeyConfiguration(ModelBuilder modelBuilder) {
-        //связь
-        modelBuilder.Entity<Event>().HasMany(e => e.Tickets).WithOne(t => t.Event).HasForeignKey("EventId");
+        //связь событие-билет 1-N
+        modelBuilder.Entity<Event>().HasMany(e => e.Tickets).WithOne(t => t.Event).HasForeignKey("EventId").OnDelete(DeleteBehavior.Cascade);
     }
 
     /// <summary>

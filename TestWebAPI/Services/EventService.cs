@@ -1,7 +1,5 @@
 ﻿using System.Text;
 using API.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 
 namespace API.Services;
 
@@ -9,7 +7,7 @@ public class EventService : EntityService<Event>, IEventService {
 
     public EventService(ApplicationDbContext context, ILogger<EntityService<Event>> logger) : base(context, logger) { }
     
-    public async Task<Event> CreateAsync(string eventName, DateTime eventDate, long locationId, int ticketsNumber) {
+    public async Task<Event> CreateEventAsync(string eventName, DateTime eventDate, long locationId, int ticketsNumber) {
         StringBuilder errors = new StringBuilder(); 
         if (string.IsNullOrWhiteSpace(eventName))
             errors.Append("Incorrect event name");
@@ -32,10 +30,7 @@ public class EventService : EntityService<Event>, IEventService {
         Event result = new Event() { Name = eventName, Date = eventDate, Location = location };
         CreateTicketsForEvent(result, ticketsNumber);
 
-        try {
-            _context.Events.Add(result);
-            await _context.SaveChangesAsync();
-        } catch { throw; }
+        await SaveAsync(result);
 
         return result;
     }
@@ -58,15 +53,7 @@ public class EventService : EntityService<Event>, IEventService {
             createdEvent.Tickets.Add(res);
         }
     }
-
-    // public override async Task DeleteAsync(long id) {
-    //     // Event? @event = await this.GetEntityAsync(id);
-    //     // if (@event == null) return;
-    //     // //await this.DeleteListAsync(@event.Tickets);
-        
-    //     // base.DeleteAsync(id);
-    // }
-
+    
     /// <summary>
     /// Генерируем номер билета
     /// 00001, 0002

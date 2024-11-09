@@ -15,7 +15,7 @@ public class Ticket : Entity {
     /// <summary>
     /// Мероприятие
     /// </summary>
-    public virtual Event Event { get; set; } = new Event();
+    public Event Event { get; set; } = new Event();
 
     /// <summary>
     /// Дата мероприятия

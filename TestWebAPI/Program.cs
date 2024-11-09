@@ -37,8 +37,8 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
         options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
       //  .UseLazyLoadingProxies()); //Включаем для ленивой загрузки виртуальных ICollection, чтобы не тащить много лишних данных сразу
 
-    services.AddControllers();
-        //.AddJsonOptions(options => { options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve; });
+    services.AddControllers()
+        .AddJsonOptions(options => { options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve; });
         
     services.AddEndpointsApiExplorer(); // Добавление эндпоинтов и конфигурации для Swagger
     services.AddSwaggerGen(c => { //не работает для загрузки файлов, это кал
@@ -82,5 +82,3 @@ public class FileUploadOperationFilter : IOperationFilter {
         }
     }
 }
-
-

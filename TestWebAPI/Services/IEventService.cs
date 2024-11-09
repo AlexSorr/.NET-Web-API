@@ -6,6 +6,6 @@ namespace API.Services;
 
 public interface IEventService : IEntityService<Event> {
     
-    Task<Event> CreateAsync(string eventName, DateTime eventDate, long locationId, int ticketsNumber);
+    Task<Event> CreateEventAsync(string eventName, DateTime eventDate, long locationId, int ticketsNumber);
 
 }

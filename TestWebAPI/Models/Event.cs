@@ -15,7 +15,7 @@ public class Event : Entity {
     /// <summary>
     /// Локация
     /// </summary>
-    public virtual Location Location { get; set; } = new Location();
+    public Location Location { get; set; } = new Location();
 
     /// <summary>
     /// Дата мероприятия
@@ -25,19 +25,19 @@ public class Event : Entity {
     /// <summary>
     /// Список билетов
     /// </summary>
-    public virtual ICollection<Ticket> Tickets { get; } = new List<Ticket>();
+    public List<Ticket> Tickets { get; set; } = new List<Ticket>();
     
     /// <summary>
     ///  Доступные билеты
     /// </summary>
     [NotMapped]
-    public virtual IEnumerable<Ticket> AvailableTickets => Tickets.Where(t => t.BookingStatus == BookingStatus.Free);
+    public IEnumerable<Ticket> AvailableTickets => Tickets.Where(t => t.BookingStatus == BookingStatus.Free);
 
     /// <summary>
     /// Забронированные билеты
     /// </summary>
     [NotMapped]
-    public virtual IEnumerable<Ticket> BookedTickets => Tickets.Where(t => t.BookingStatus == BookingStatus.Booked);
+    public IEnumerable<Ticket> BookedTickets => Tickets.Where(t => t.BookingStatus == BookingStatus.Booked);
 
     /// <summary>
     /// Sold out

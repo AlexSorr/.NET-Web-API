@@ -1,7 +1,6 @@
 using API.Controllers.Base;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 using API.Services;
 
@@ -20,11 +19,10 @@ public class EventsController : APIBaseController {
     [HttpPost("create_event")]
     public async Task<ActionResult<Event>> CreateEvent(string eventName, DateTime eventDate, long locationId, int ticketsNumber) {
         try {
-            await _entityService.CreateAsync(eventName, eventDate, locationId, ticketsNumber);
+            return Ok(await _entityService.CreateEventAsync(eventName, eventDate, locationId, ticketsNumber));
         } catch (Exception ex) {
             return HandleError(ex);
         }
-        return Ok("Event created");
     }
 
     /// <summary>
@@ -32,7 +30,10 @@ public class EventsController : APIBaseController {
     /// </summary>
     /// <returns>event_list</returns>
     [HttpGet("get_all_events")]
-    public async Task<ActionResult<IEnumerable<Event>>> GetEvents() => await _entityService.GetAllAsync();
+    public async Task<ActionResult<IEnumerable<Event>>> GetEvents() {
+        IEnumerable<Event> events = await _entityService.GetAllAsync();
+        return events != null && events.Any() ? Ok(events) : NotFound("Events not found");
+    } 
 
 
     /// <summary>
@@ -41,7 +42,7 @@ public class EventsController : APIBaseController {
     /// <param name="id">event_id</param>
     [HttpGet("get_event_{id}")]
     public async Task<ActionResult<Event>> GetEvent(long id) {
-        Event eventData = await _entityService.GetEntityAsync(id);
+        Event eventData = await _entityService.LoadByIdAsync(id);
         return eventData == null ? NotFound($"Event with id {id} not exists") : Ok(eventData);
     }
 
