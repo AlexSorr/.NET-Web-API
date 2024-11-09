@@ -37,8 +37,8 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
         .UseLazyLoadingProxies()); //Включаем для ленивой загрузки виртуальных ICollection, чтобы не тащить много лишних данных сразу
     services.AddControllers();
     services.AddEndpointsApiExplorer(); // Добавление эндпоинтов и конфигурации для Swagger
-    services.AddSwaggerGen();
-    services.AddSwaggerGen(c => {
+    //services.AddSwaggerGen();
+    services.AddSwaggerGen(c => { //не работает для загрузки файлов, это кал
         c.OperationFilter<FileUploadOperationFilter>();
     });
 

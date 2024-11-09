@@ -1,0 +1,107 @@
+openapi: 3.0.0
+info:
+  title: Events API
+  version: 1.0.0
+  description: API для управления событиями
+
+paths:
+  /api/events/create_event:
+    post:
+      summary: Создание события
+      operationId: createEvent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '201':
+          description: Событие успешно создано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /api/events/get_all_events:
+    get:
+      summary: Получить все мероприятия
+      operationId: getEvents
+      responses:
+        '200':
+          description: Список событий
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /api/events/get_event_{id}:
+    get:
+      summary: Поиск события по id
+      operationId: getEvent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Идентификатор события
+      responses:
+        '200':
+          description: Данные о событии
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          description: Событие не найдено
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /api/events/delete_event_{id}:
+    delete:
+      summary: Удаление события по id
+      operationId: deleteEvent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Идентификатор события
+      responses:
+        '204':
+          description: Событие успешно удалено
+        '404':
+          description: Событие не найдено
+        '500':
+          description: Внутренняя ошибка сервера
+
+components:
+  schemas:
+    Event:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Sample Event"
+        description:
+          type: string
+          example: "This is a sample event."
+        startDate:
+          type: string
+          format: date-time
+          example: "2024-11-15T08:00:00Z"
+        endDate:
+          type: string
+          format: date-time
+          example: "2024-11-15T10:00:00Z"
