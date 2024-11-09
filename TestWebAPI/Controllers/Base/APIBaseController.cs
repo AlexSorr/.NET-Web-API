@@ -20,5 +20,5 @@ public abstract class APIBaseController : ControllerBase {
         _logger.LogError(ex, "An error occurred");
         return StatusCode(500, $"An internal error occurred: {ex.Message}");
     }
-
+    
 }

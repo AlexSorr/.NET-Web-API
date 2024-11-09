@@ -41,8 +41,6 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
     services.AddSwaggerGen(c => { //не работает для загрузки файлов, это кал
         c.OperationFilter<FileUploadOperationFilter>();
     });
-
-
     //загрузчик данных
     services.AddTransient<DataLoader>();
 }

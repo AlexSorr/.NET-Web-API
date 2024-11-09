@@ -7,6 +7,8 @@ info:
 paths:
   /api/events/create_event:
     post:
+      tags: 
+        - "api"
       summary: Создание события
       operationId: createEvent
       requestBody:
@@ -27,6 +29,8 @@ paths:
 
   /api/events/get_all_events:
     get:
+      tags: 
+       - "api"    
       summary: Получить все мероприятия
       operationId: getEvents
       responses:
@@ -43,6 +47,8 @@ paths:
 
   /api/events/get_event_{id}:
     get:
+      tags: 
+        - "api"    
       summary: Поиск события по id
       operationId: getEvent
       parameters:
@@ -66,6 +72,8 @@ paths:
 
   /api/events/delete_event_{id}:
     delete:
+      tags: 
+        - "api"    
       summary: Удаление события по id
       operationId: deleteEvent
       parameters:

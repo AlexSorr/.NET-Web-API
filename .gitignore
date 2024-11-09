@@ -8,3 +8,4 @@ TestWebAPI/Logs/
 Dockerfile
 .DS_Store
 TestWebAPI/.DS_Store
+TestWebAPI/.editorconfig
