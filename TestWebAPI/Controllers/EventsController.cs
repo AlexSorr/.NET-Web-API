@@ -3,12 +3,18 @@ using API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using API.Services;
+
 
 [Route("api/[controller]")]
 [ApiController]
 public class EventsController : APIBaseController {
 
-    public EventsController(ApplicationDbContext context, ILogger<EventsController> logger): base(context, logger) { }
+    protected readonly IEntityService<Event> _entityService;
+
+    public EventsController(ApplicationDbContext context, ILogger<EventsController> logger, IEntityService<Event> entityService): base(context, logger) { 
+        _entityService = entityService;
+    }
 
     // Создание события
     [HttpPost("create_event")]
@@ -23,7 +29,7 @@ public class EventsController : APIBaseController {
     /// </summary>
     /// <returns>event_list</returns>
     [HttpGet("get_all_events")]
-    public async Task<ActionResult<IEnumerable<Event>>> GetEvents() => await _context.Events.ToListAsync();
+    public async Task<ActionResult<IEnumerable<Event>>> GetEvents() => await _entityService.GetAllAsync();
 
 
     /// <summary>
@@ -32,7 +38,7 @@ public class EventsController : APIBaseController {
     /// <param name="id">event_id</param>
     [HttpGet("get_event_{id}")]
     public async Task<ActionResult<Event>> GetEvent(long id) {
-        Event? eventData = await _context.Events.FindAsync(id);
+        Event eventData = await _entityService.GetEntityAsync(id);
         return eventData == null ? NotFound($"Event with id {id} not exists") : Ok(eventData);
     }
 
@@ -43,17 +49,11 @@ public class EventsController : APIBaseController {
     /// <param name="id">event_id</param>
     [HttpDelete("delete_event_{id}")]
     public async Task<IActionResult> DeleteEvent(long id) {
-        Event? eventData = await _context.Events.FindAsync(id);
-        if (eventData == null)
-            return NotFound();
-
         try {
-            _context.Events.Remove(eventData);
-            await _context.SaveChangesAsync();
+            await _entityService.DeleteAsync(id);
         } catch (Exception ex) {
             return HandleError(ex);
         }
-
         return NoContent();
     }
 

@@ -3,6 +3,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 
 using API.Data;
+using API.Services;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,12 +38,16 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
         .UseLazyLoadingProxies()); //Включаем для ленивой загрузки виртуальных ICollection, чтобы не тащить много лишних данных сразу
     services.AddControllers();
     services.AddEndpointsApiExplorer(); // Добавление эндпоинтов и конфигурации для Swagger
-    //services.AddSwaggerGen();
     services.AddSwaggerGen(c => { //не работает для загрузки файлов, это кал
         c.OperationFilter<FileUploadOperationFilter>();
     });
+
     //загрузчик данных
     services.AddTransient<DataLoader>();
+
+    // Регистрация EntityService как обобщенного сервиса
+    services.AddScoped(typeof(IEntityService<>), typeof(EntityService<>));
+
 }
 
 /// <summary>

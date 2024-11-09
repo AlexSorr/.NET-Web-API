@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Services;
 
-public interface IService<T> where T : IEntity {
+public interface IEntityService<T> where T : IEntity {
 
     Task<T> GetEntityAsync(long id);
 
-    Task<IEnumerable<T>> GetAllAsync();
+    Task<ActionResult<IEnumerable<T>>> GetAllAsync();
 
     Task DeleteAsync(long id);
 

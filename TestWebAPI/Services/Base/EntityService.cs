@@ -1,5 +1,6 @@
 ﻿
 using API.Models.Base;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Services;
@@ -8,7 +9,7 @@ namespace API.Services;
 /// Сервис для работы с сущностями
 /// </summary>
 /// <typeparam name="T">Тип сущности</typeparam>
-public class EntityService<T> : IService<T> where T : class, IEntity {
+public class EntityService<T> : IEntityService<T> where T : class, IEntity {
 
     private readonly ApplicationDbContext _context;
 
@@ -27,7 +28,7 @@ public class EntityService<T> : IService<T> where T : class, IEntity {
     /// Получить все сущности
     /// </summary>
     /// <returns></returns>
-    public async Task<IEnumerable<T>> GetAllAsync() {
+    public async Task<ActionResult<IEnumerable<T>>> GetAllAsync() {
         return await _context.Set<T>().ToListAsync();
     }
 
