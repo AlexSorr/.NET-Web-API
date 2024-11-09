@@ -8,7 +8,7 @@ if [ ! -d "$migrations_path" ]; then
 fi
     
 # Подсчёт количества видимых элементов в папке
-count=$(find ./Migrations -maxdepth 1 -type f | grep -v "/\." | wc -l)
+count=$(find "$migrations_path" -maxdepth 1 -type f | grep -v "/\." | wc -l)
 
 echo -e "Path: $migrations_path\nElements count:$count"
 
