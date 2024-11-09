@@ -45,8 +45,9 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
     //загрузчик данных
     services.AddTransient<DataLoader>();
 
-    // Регистрация EntityService как обобщенного сервиса
+    // Регистрация своиих обобщенных сервисов
     services.AddScoped(typeof(IEntityService<>), typeof(EntityService<>));
+    services.AddScoped(typeof(IEventService), typeof(EventService));
 
 }
 

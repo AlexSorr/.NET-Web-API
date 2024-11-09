@@ -10,18 +10,21 @@ using API.Services;
 [ApiController]
 public class EventsController : APIBaseController {
 
-    protected readonly IEntityService<Event> _entityService;
+    protected readonly IEventService _entityService;
 
-    public EventsController(ApplicationDbContext context, ILogger<EventsController> logger, IEntityService<Event> entityService): base(context, logger) { 
+    public EventsController(ApplicationDbContext context, ILogger<EventsController> logger, IEventService entityService): base(context, logger) { 
         _entityService = entityService;
     }
 
     // Создание события
     [HttpPost("create_event")]
-    public async Task<ActionResult<Event>> CreateEvent(Event eventData) {
-        _context.Events.Add(eventData);
-        await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetEvent), new { id = eventData.Id }, eventData);
+    public async Task<ActionResult<Event>> CreateEvent(string eventName, DateTime eventDate, long locationId, int ticketsNumber) {
+        try {
+            await _entityService.CreateAsync(eventName, eventDate, locationId, ticketsNumber);
+        } catch (Exception ex) {
+            return HandleError(ex);
+        }
+        return Ok("Event created");
     }
 
     /// <summary>

@@ -16,7 +16,7 @@ public abstract class APIBaseController : ControllerBase {
     /// <summary>
     /// Обработка ошибки для дочерних контроллеров
     /// </summary>
-    protected IActionResult HandleError(Exception ex)  {
+    protected ActionResult HandleError(Exception ex)  {
         _logger.LogError(ex, "An error occurred");
         return StatusCode(500, $"An internal error occurred: {ex.Message}");
     }

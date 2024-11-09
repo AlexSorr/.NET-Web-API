@@ -11,9 +11,13 @@ namespace API.Services;
 /// <typeparam name="T">Тип сущности</typeparam>
 public class EntityService<T> : IEntityService<T> where T : class, IEntity {
 
-    private readonly ApplicationDbContext _context;
+    protected readonly ApplicationDbContext _context;
 
-    public EntityService(ApplicationDbContext context) { _context = context; }
+    protected readonly ILogger<EntityService<T>> _logger;
+
+    public EntityService(ApplicationDbContext context, ILogger<EntityService<T>> logger) { 
+        _context = context; _logger = logger; 
+    }
 
     /// <summary>
     /// Получить сущность по id
@@ -45,9 +49,7 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
         _context.Set<T>().Remove(entity);
         try {
             await _context.SaveChangesAsync();
-        } catch {
-            throw;
-        }
+        } catch { throw; }
     }
 
     /// <summary>
@@ -69,5 +71,6 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
         entity = _context.Set<T>().Find(id);
         return entity != null;
     }
+
 
 }
