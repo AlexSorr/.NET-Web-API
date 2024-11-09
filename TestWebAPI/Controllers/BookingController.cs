@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 using API.Models;
 using API.Controllers.Base;
@@ -11,6 +10,7 @@ public class BookingsController : APIBaseController {
 
     public BookingsController(ApplicationDbContext context, ILogger<BookingsController> logger) : base(context, logger) { } 
 
+    #region old
     // // GET: api/Bookings
     // [HttpGet]
     // public async Task<ActionResult<IEnumerable<Booking>>> GetBookings() => await _context.Bookings.Include(b => b.Event).ToListAsync();
@@ -79,5 +79,6 @@ public class BookingsController : APIBaseController {
 
     //     return NoContent();
     // }
+    #endregion
 
 }

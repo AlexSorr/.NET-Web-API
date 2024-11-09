@@ -13,10 +13,12 @@ public abstract class APIBaseController : ControllerBase {
         _logger = logger;
     }
 
-    // Метод, доступный всем дочерним контроллерам
+    /// <summary>
+    /// Обработка ошибки для дочерних контроллеров
+    /// </summary>
     protected IActionResult HandleError(Exception ex)  {
         _logger.LogError(ex, "An error occurred");
-        return StatusCode(500, "An internal error occurred.");
+        return StatusCode(500, $"An internal error occurred: {ex.Message}");
     }
 
 }

@@ -37,6 +37,18 @@ public class EventsController : APIBaseController {
         return eventData == null ? NotFound($"Event with id {id} not exists") : Ok(eventData);
     }
 
+    // Удаление события
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteEvent(long id) {
+        Event? eventData = await _context.Events.FindAsync(id);
+        if (eventData == null)
+            return NotFound();
+        
+        _context.Events.Remove(eventData);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 
     // Обновление события
     // [HttpPut("{id}")]
@@ -58,19 +70,5 @@ public class EventsController : APIBaseController {
 
     //     return NoContent();
     // }
-
-
-    // Удаление события
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteEvent(long id) {
-        Event? eventData = await _context.Events.FindAsync(id);
-        if (eventData == null)
-            return NotFound();
-        
-        _context.Events.Remove(eventData);
-        await _context.SaveChangesAsync();
-
-        return NoContent();
-    }
 
 }

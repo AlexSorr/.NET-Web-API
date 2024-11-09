@@ -19,22 +19,6 @@ public abstract class BulkUploadController<T> : APIBaseController, IBulkUploadCo
     }
 
     /// <summary>
-    /// Заливка сущностей из файла
-    /// </summary>
-    /// <param name="file"></param>
-    /// <returns></returns>
-    // [HttpPost("load/from_file")]
-    // public async Task<IActionResult> UploadFromFile([FromForm] IFormFile file) {
-    //     try {
-    //         await _dataLoader.UploadDataFromFileAsync<T>(file);
-    //         return Ok("Data uploaded");
-    //     } catch (Exception ex) {
-    //         _logger.LogError(ex.ToString());
-    //         return StatusCode(500, $"Internal server error: {ex.Message}");
-    //     }
-    // }
-
-    /// <summary>
     /// Добавление сущностей по реквесту
     /// </summary>
     /// <param name="locations"></param>
@@ -45,8 +29,22 @@ public abstract class BulkUploadController<T> : APIBaseController, IBulkUploadCo
             await _dataLoader.UploadDataAsync<T>(objects);
             return Ok("Data uploaded");
         } catch (Exception ex) {
-            _logger.LogError("Error data loading\n" + ex.ToString());
-            return StatusCode(500, $"Internal server error: {ex.Message}");
+            return HandleError(ex);
         }
     }
+
+    /// <summary>
+    /// Заливка сущностей из файла
+    /// </summary>
+    /// <param name="file"></param>
+    /// <returns></returns>
+    // [HttpPost("load/from_file")]
+    // public async Task<IActionResult> UploadFromFile([FromForm] IFormFile file) {
+    //     try {
+    //         await _dataLoader.UploadDataFromFileAsync<T>(file);
+    //     } catch (Exception ex) {
+    //         return HandleError(ex);
+    //     }
+    //     return Ok("Data uploaded");
+    // }
 }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace API.Data;
@@ -26,7 +27,7 @@ public class DataLoader {
     /// <typeparam name="T"></typeparam>
     /// <param name="file"></param>
     /// <returns></returns>
-    public async Task UploadDataFromFileAsync<T>(IFormFile file) where T : class {
+    public async Task UploadDataFromFileAsync<T>([FromForm] IFormFile file) where T : class {
         if (file == null || file.Length == 0) return;
 
         using (StreamReader reader = new StreamReader(file.OpenReadStream())) {
@@ -36,6 +37,5 @@ public class DataLoader {
         }
     }
 
-    
 
 }
