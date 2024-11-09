@@ -36,17 +36,41 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
         return await _context.Set<T>().ToListAsync();
     }
 
+
     /// <summary>
     /// Удаление сущности
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public async Task DeleteAsync(long id) {
+    public virtual async Task DeleteAsync(long id) {
         T entity;
         if (!EntityExists(id, out entity))
             return;
+        await DeleteAsync(entity);
+    }
 
+    /// <summary>
+    /// Удалить сущеость асинхронно
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <returns></returns>
+    public virtual async Task DeleteAsync(T entity) {
+        if (entity == null) return;
         _context.Set<T>().Remove(entity);
+        try {
+            await _context.SaveChangesAsync();
+        } catch { throw; }
+    }
+
+    /// <summary>
+    /// Удалить список сущностей
+    /// </summary>
+    /// <param name="entityList"></param>
+    /// <returns></returns>
+    public virtual async Task DeleteListAsync(IEnumerable<T> entityList) {
+        if (entityList == null || !entityList.Any()) return;
+
+        _context.Set<T>().RemoveRange(entityList);
         try {
             await _context.SaveChangesAsync();
         } catch { throw; }

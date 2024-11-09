@@ -59,6 +59,14 @@ public class EventService : EntityService<Event>, IEventService {
         }
     }
 
+    // public override async Task DeleteAsync(long id) {
+    //     // Event? @event = await this.GetEntityAsync(id);
+    //     // if (@event == null) return;
+    //     // //await this.DeleteListAsync(@event.Tickets);
+        
+    //     // base.DeleteAsync(id);
+    // }
+
     /// <summary>
     /// Генерируем номер билета
     /// 00001, 0002
