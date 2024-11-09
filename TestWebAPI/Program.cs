@@ -34,8 +34,8 @@ app.Run();
 // Добавление сервисов
 void ConfigureServices(IServiceCollection services, IConfiguration configuration) {
     services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))//);
-        .UseLazyLoadingProxies()); //Включаем для ленивой загрузки виртуальных ICollection, чтобы не тащить много лишних данных сразу
+        options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+      //  .UseLazyLoadingProxies()); //Включаем для ленивой загрузки виртуальных ICollection, чтобы не тащить много лишних данных сразу
 
     services.AddControllers();
         //.AddJsonOptions(options => { options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve; });

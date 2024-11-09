@@ -42,7 +42,7 @@ public class Event : Entity {
     /// <summary>
     /// Sold out
     /// </summary>
-    public bool IsSoldOut => AvailableTickets.Count() <= 0;
+    public bool IsSoldOut => Tickets.Any() && AvailableTickets.Count() <= 0;
 
 
 }

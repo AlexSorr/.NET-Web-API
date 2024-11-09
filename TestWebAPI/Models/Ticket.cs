@@ -20,7 +20,7 @@ public class Ticket : Entity {
     /// <summary>
     /// Дата мероприятия
     /// </summary>
-    public DateTime EventDate => this.Event?.Date ?? DateTime.MinValue; 
+    public DateTime? EventDate => this.Event?.Date; 
 
     /// <summary>
     /// Бронирование и продажа
@@ -32,12 +32,12 @@ public class Ticket : Entity {
             _bookingStatus = value;
             switch (_bookingStatus) {
                 case BookingStatus.Free:
-                    this.BookingDate = DateTime.MinValue;
-                    this.SellingDate = DateTime.MinValue;
+                    this.BookingDate = null;
+                    this.SellingDate = null;
                     break;
                 case BookingStatus.Booked:
                     this.BookingDate = DateTime.Now;
-                    this.SellingDate = DateTime.MinValue;
+                    this.SellingDate = null;
                     break;
                 case BookingStatus.Selled:
                     this.SellingDate = DateTime.Now;
@@ -50,12 +50,12 @@ public class Ticket : Entity {
     /// <summary>
     /// Дата бронирования
     /// </summary>
-    public DateTime BookingDate { get; private set; }
+    public DateTime? BookingDate { get; set; }
 
     /// <summary>
     /// Дата продажи
     /// </summary>
-    public DateTime SellingDate { get; private set; }
+    public DateTime? SellingDate { get; set; }
     
     /// <summary>
     /// Зарезервирован
