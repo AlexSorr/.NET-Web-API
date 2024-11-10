@@ -1,0 +1,348 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TestWebAPI</name>
+    </assembly>
+    <members>
+        <member name="M:API.Controllers.Base.APIBaseController`1.HandleError(System.Exception)">
+            <summary>
+            Обработка ошибки для дочерних контроллеров
+            </summary>
+        </member>
+        <member name="P:API.Models.Event.Name">
+            <summary>
+            Название
+            </summary>
+        </member>
+        <member name="P:API.Models.Event.Location">
+            <summary>
+            Локация
+            </summary>
+        </member>
+        <member name="P:API.Models.Event.Date">
+            <summary>
+            Дата мероприятия
+            </summary>
+        </member>
+        <member name="P:API.Models.Event.Tickets">
+            <summary>
+            Список билетов
+            </summary>
+        </member>
+        <member name="P:API.Models.Event.AvailableTickets">
+            <summary>
+             Доступные билеты
+            </summary>
+        </member>
+        <member name="P:API.Models.Event.BookedTickets">
+            <summary>
+            Забронированные билеты
+            </summary>
+        </member>
+        <member name="P:API.Models.Event.IsSoldOut">
+            <summary>
+            Sold out
+            </summary>
+        </member>
+        <member name="P:API.Models.Ticket.Number">
+            <summary>
+            Номер билета
+            Надо как-то генерить при создании
+            </summary>
+        </member>
+        <member name="P:API.Models.Ticket.Event">
+            <summary>
+            Мероприятие
+            </summary>
+        </member>
+        <member name="P:API.Models.Ticket.EventDate">
+            <summary>
+            Дата мероприятия
+            </summary>
+        </member>
+        <member name="F:API.Models.Ticket._bookingStatus">
+            <summary>
+            Бронирование и продажа
+            </summary>
+        </member>
+        <member name="P:API.Models.Ticket.BookingDate">
+            <summary>
+            Дата бронирования
+            </summary>
+        </member>
+        <member name="P:API.Models.Ticket.SellingDate">
+            <summary>
+            Дата продажи
+            </summary>
+        </member>
+        <member name="P:API.Models.Ticket.IsBooked">
+            <summary>
+            Зарезервирован
+            </summary>
+        </member>
+        <member name="P:API.Models.Ticket.IsSelled">
+            <summary>
+            Продан
+            </summary>
+        </member>
+        <member name="T:API.Services.EntityService`1">
+            <summary>
+            Сервис для работы с сущностями
+            </summary>
+            <typeparam name="T">Тип сущности</typeparam>
+        </member>
+        <member name="M:API.Services.EntityService`1.SaveAsync(`0)">
+            <summary>
+            Создать сущность (сохранить в БД)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.EntityService`1.SaveBatchAsync(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Пакетно созранить сущности
+            </summary>
+            <param name="batch"></param>
+            <param name="bathcSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.EntityService`1.LoadByIdAsync(System.Int64)">
+            <summary>
+            Получить сущность по id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.EntityService`1.LoadByIdWithRelatedDataAsync(System.Int64,System.Linq.Expressions.Expression{System.Func{`0,System.Object}}[])">
+            <summary>
+            Загрузить по id
+            С параметрами для "жадной" загрузки
+            </summary>
+            <param name="id"></param>
+            <param name="includes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.EntityService`1.GetAllAsync">
+            <summary>
+            Получить все сущности
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.EntityService`1.GetAllWithRelatedDataAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Object}}[])">
+            <summary>
+            Получить все 
+            С параметрами для "жадной" загрузки
+            </summary>
+            <param name="includes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.EntityService`1.DeleteRangeAsync(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Удалить список сущностей
+            </summary>
+            <param name="entityList"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.EntityService`1.DeleteAsync(System.Int64)">
+            <summary>
+            Удалить асинхронно
+            </summary>
+            <param name="id">id сущности</param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.EntityService`1.DeleteAsync(`0)">
+            <summary>
+            Удалить сущеость асинхронно
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.EntityService`1.EntityExists(System.Int64)">
+            <summary>
+            Сущность есть в БД
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.EntityService`1.EntityExists(System.Int64,`0@)">
+            <summary>
+            Сущность есть в БД, возвращает результат
+            </summary>
+            <param name="id"></param>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.IEntityService`1.SaveAsync(`0)">
+            <summary>
+            Создать сущность (сохранить в БД)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.IEntityService`1.SaveBatchAsync(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Пакетное сохранение списка сущностей
+            </summary>
+            <param name="batch"></param>
+            <param name="bathcSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.IEntityService`1.LoadByIdAsync(System.Int64)">
+            <summary>
+            Поиск по id объекта
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.IEntityService`1.LoadByIdWithRelatedDataAsync(System.Int64,System.Linq.Expressions.Expression{System.Func{`0,System.Object}}[])">
+            <summary>
+            Загрузить с доп. данными
+            </summary>
+            <param name="id"></param>
+            <param name="includes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.IEntityService`1.GetAllAsync">
+            <summary>
+            Получить все сущности
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.IEntityService`1.GetAllWithRelatedDataAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Object}}[])">
+            <summary>
+            Получить все сущности с доп. данными
+            </summary>
+            <param name="includes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.IEntityService`1.DeleteRangeAsync(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Удалить множество асинхронно
+            </summary>
+            <param name="entities"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.IEntityService`1.DeleteAsync(`0)">
+            <summary>
+            Удалить асинхронно
+            </summary>
+            <param name="entity">сущность</param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.IEntityService`1.DeleteAsync(System.Int64)">
+            <summary>
+            Удалить асинхронно
+            </summary>
+            <param name="id">id сущности</param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.IEntityService`1.EntityExists(System.Int64)">
+            <summary>
+            Сущность есть в БД
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.IEntityService`1.EntityExists(System.Int64,`0@)">
+            <summary>
+            Сущность есть в БД, возвращает результат
+            </summary>
+            <param name="id"></param>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.EventService.CreateTicketsForEvent(API.Models.Event,System.Int32)">
+            <summary>
+            Создать билеты к мероприятию
+            </summary>
+            <param name="createdEvent"></param>
+            <param name="ticketsCount"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.EventService.GenerateTicketNumber(System.Int32,System.Int32)">
+            <summary>
+            Генерируем номер билета
+            00001, 0002
+            </summary>
+            <param name="number"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Services.EventService.LocationExists(System.Int64,API.Models.Location@)">
+            <summary>
+            Проверка, что локация по id существует в базе
+            </summary>
+            <param name="locationId"></param>
+            <param name="location"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EventsController.GetEvents">
+            <summary>
+            Получить все мероприятия
+            </summary>
+            <returns>event_list</returns>
+        </member>
+        <member name="M:EventsController.GetEventAvailableTicketCount(System.Int64)">
+            <summary>
+            Получить количество доступных билетов на мероприятие
+            </summary>
+            <param name="eventId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EventsController.GetEvent(System.Int64)">
+            <summary>
+            Поиск события по id
+            </summary>
+            <param name="id">event_id</param>
+        </member>
+        <member name="M:EventsController.DeleteEvent(System.Int64)">
+            <summary>
+            Удаление события по id
+            </summary>
+            <param name="id">event_id</param>
+        </member>
+        <member name="M:LocationController.UploadLocations(System.Collections.Generic.IEnumerable{API.Models.Location})">
+            <summary>
+            Загрузить локации
+            </summary>
+            <param name="objects"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApplicationDbContext.ApplyEntityKeyConfiguration(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            Получаем все сущности, реализующие интерфейс IEntity из Model и добавляем их в ModelBuilder с привязкой PK - Id
+            </summary>
+        </member>
+        <member name="M:ApplicationDbContext.ApplyForeignKeyConfiguration(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            Применить конфигурацию к внешним ключам
+            </summary>
+        </member>
+        <member name="M:ApplicationDbContext.SetDbObjectNamesLowerInvariantCase(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            Привести имена таблиц и колонок в них к нижнему регистру без кавычек
+            </summary>
+        </member>
+        <member name="T:TestWebAPI.Migrations.migration20241110_061056">
+            <inheritdoc />
+        </member>
+        <member name="M:TestWebAPI.Migrations.migration20241110_061056.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TestWebAPI.Migrations.migration20241110_061056.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TestWebAPI.Migrations.migration20241110_061056.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:TestWebAPI.Migrations.migration20241110_151942">
+            <inheritdoc />
+        </member>
+        <member name="M:TestWebAPI.Migrations.migration20241110_151942.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TestWebAPI.Migrations.migration20241110_151942.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TestWebAPI.Migrations.migration20241110_151942.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>
