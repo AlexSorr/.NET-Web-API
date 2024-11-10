@@ -30,9 +30,23 @@ public class EventsController : APIBaseController<Event> {
     /// <returns>event_list</returns>
     [HttpGet("get_all_events")]
     public async Task<ActionResult<IEnumerable<Event>>> GetEvents() {
-        IEnumerable<Event> events = await _entityService.GetAllWithRelatedDataAsync(x => x.Tickets, y => y.Location);
-        return events != null && events.Any() ? Ok(events.ToArray()) : NotFound("Events not found");
+        List<Event> events = await _entityService.GetAllWithRelatedDataAsync(x => x.Tickets, y => y.Location);
+        return events != null && events.Any() ? Ok(events) : NotFound("Events not found");
     } 
+
+
+    /// <summary>
+    /// Получить количество доступных билетов на мероприятие
+    /// </summary>
+    /// <param name="eventId"></param>
+    /// <returns></returns>
+    [HttpGet("get_event_available_tickets_count")]
+    public async Task<ActionResult<int>> GetEventAvailableTicketCount(long eventId) {
+        Event @event = await _entityService.LoadByIdWithRelatedDataAsync(eventId, e => e.Tickets);
+        if (@event == null)
+            return NotFound($"Event with id {eventId} not found!");
+        return Ok(@event.AvailableTickets.Count());
+    }
 
 
     /// <summary>

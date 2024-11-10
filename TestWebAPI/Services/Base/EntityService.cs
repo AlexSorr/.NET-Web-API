@@ -93,11 +93,10 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
     /// <param name="includes"></param>
     /// <returns></returns>
     public async Task<T> LoadByIdWithRelatedDataAsync(long id, params Expression<Func<T, object>>[] includes) {
-        var query = _context.Set<T>().AsQueryable();
+        IQueryable<T> query = _context.Set<T>().AsQueryable();
         foreach (var include in includes) 
             query = query.Include(include);  
-        
-        return await query.FirstOrDefaultAsync(entity => entity.Id == id);  // Загрузим сущность по ID
+        return await query.FirstOrDefaultAsync(entity => entity.Id == id);
     }
 
 

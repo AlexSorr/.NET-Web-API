@@ -11,7 +11,7 @@ migration_name="migration-$(date +'%Y-%m-%d_%H-%M-%S')"
 echo -e "Creating migration: $migration_name" 
 
 # Добавить миграцию, обновить БД
-dotnet ef migrations add "$migration_name"
+dotnet ef migrations add "$migration_name" >&2
 
 if [ $? -ne 0 ]; then
     echo "Creating migration error, abort"
