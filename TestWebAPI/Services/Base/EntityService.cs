@@ -14,6 +14,8 @@ namespace API.Services;
 /// <typeparam name="T">Тип сущности, которая будет обрабатываться сервисом.</typeparam>
 public class EntityService<T> : IEntityService<T> where T : class, IEntity {
 
+    #region fields_ctor
+
     /// <summary>
     /// Контекст базы данных, используемый для взаимодействия с данными.
     /// </summary>
@@ -33,6 +35,8 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
         _context = context; 
         _logger = logger; 
     }
+
+    #endregion
 
     /// <summary>
     /// Сохраняет сущность в базе данных асинхронно.
@@ -119,6 +123,16 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
     }
 
     /// <summary>
+    /// Возвращает все сущности данного типа, отфильтрованные по выражению.
+    /// </summary>
+    /// <param name="predicate">Выражение для фильтрации сущностей.</param>
+    /// <returns>Список отфильтрованных сущностей.</returns>
+    public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate) {
+        return await _context.Set<T>().Where(predicate).ToListAsync();
+    }
+
+
+    /// <summary>
     /// Возвращает все сущности с включением связанных данных.
     /// </summary>
     /// <param name="includes">Свойства для включения в запрос (связанные сущности).</param>
@@ -167,7 +181,7 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
     /// <param name="id">Идентификатор сущности.</param>
     /// <returns>True, если сущность существует; иначе false.</returns>
     public bool EntityExists(long id) {
-        return _context.Set<T>().Find(id) != null;
+        return _context.Set<T>().Any(x => x.Id == id);  
     }
 
     /// <summary>

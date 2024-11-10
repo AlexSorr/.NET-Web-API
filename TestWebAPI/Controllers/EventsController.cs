@@ -45,24 +45,9 @@ public class EventsController : APIBaseController<Event> {
     /// <returns>event_list</returns>
     [HttpGet("get_all_events")]
     public async Task<ActionResult<IEnumerable<Event>>> GetEvents() {
-        List<Event> events = await _entityService.GetAllWithRelatedDataAsync(x => x.Tickets, y => y.Location);
+        List<Event> events = await _entityService.GetAllWithRelatedDataAsync(y => y.Location);
         return events != null && events.Any() ? Ok(events) : NotFound("Events not found");
     } 
-
-
-    /// <summary>
-    /// Получить количество доступных билетов на мероприятие
-    /// </summary>
-    /// <param name="eventId">Id мероприятия</param>
-    /// <returns></returns>
-    [HttpGet("get_event_available_tickets_count")]
-    public async Task<ActionResult<int>> GetEventAvailableTicketCount(long eventId) {
-        Event @event = await _entityService.LoadByIdWithRelatedDataAsync(eventId, e => e.Tickets);
-        if (@event == null)
-            return NotFound($"Event with id {eventId} not found!");
-        return Ok(@event.AvailableTickets.Count());
-    }
-
 
     /// <summary>
     /// Поиск события по id
@@ -74,6 +59,16 @@ public class EventsController : APIBaseController<Event> {
         return eventData == null ? NotFound($"Event with id {id} not exists") : Ok(eventData);
     }
 
+    /// <summary>
+    /// Получить количество доступных билетов на мероприятие
+    /// </summary>
+    /// <param name="eventId">Id мероприятия</param>
+    /// <returns></returns>
+    [HttpGet("get_event_available_tickets_count")]
+    public async Task<ActionResult<int>> GetEventAvailableTicketCount(long eventId) {
+        Event @event = await _entityService.LoadByIdWithRelatedDataAsync(eventId, e => e.Tickets);
+        return @event == null ? NotFound($"Event with id {eventId} not found!") : Ok(@event.AvailableTickets.Count());
+    }
 
     /// <summary>
     /// Удаление события по id

@@ -45,6 +45,13 @@ public interface IEntityService<T> where T : IEntity {
     public Task<List<T>> GetAllAsync();
 
     /// <summary>
+    /// Возвращает все сущности данного типа, отфильтрованные по выражению.
+    /// </summary>
+    /// <param name="predicate">Выражение для фильтрации сущностей.</param>
+    /// <returns>Список отфильтрованных сущностей.</returns>
+    Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate);
+
+    /// <summary>
     /// Загружает все сущности с включением дополнительных связанных данных.
     /// </summary>
     /// <param name="includes">Выражения для включения связанных данных в запрос.</param>
