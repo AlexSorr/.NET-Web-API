@@ -4,6 +4,7 @@ using Serilog;
 
 using API.Services;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +24,11 @@ var app = builder.Build();
 // Конфигурация пайплайна HTTP запросов
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.RoutePrefix = string.Empty; // Если хотите доступ к Swagger UI по корневому URL
+    });
 }
 
 app.MapControllers();
@@ -40,7 +45,20 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
         .AddJsonOptions(options => { options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve; });
         
     services.AddEndpointsApiExplorer(); // Добавление эндпоинтов и конфигурации для Swagger
-    services.AddSwaggerGen();
+    services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+
+            // Настройка для включения XML-комментариев
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            c.IncludeXmlComments(xmlPath);
+
+            // Упорядочивание действий по контроллеру и методу
+            c.OrderActionsBy(apiDesc =>
+                $"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}");
+        }
+    );
 
     //загрузчик данных
     //services.AddTransient<DataLoader>();

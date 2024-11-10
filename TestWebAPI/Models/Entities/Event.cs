@@ -3,46 +3,51 @@ using API.Models.Base;
 
 namespace API.Models;
 
+/// <summary>
+/// Представляет событие в системе, включая его название, локацию, дату и билеты.
+/// </summary>
 public class Event : Entity {
 
+    /// <summary>
+    /// Инициализирует новый экземпляр класса <see cref="Event"/>.
+    /// Конструктор по умолчанию. 
+    /// </summary>
     public Event() { }
 
     /// <summary>
-    /// Название
+    /// Название мероприятия.
     /// </summary>
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
-    /// Локация
+    /// Локация мероприятия.
     /// </summary>
     public Location Location { get; set; } = new Location();
 
     /// <summary>
-    /// Дата мероприятия
+    /// Дата проведения мероприятия.
     /// </summary>
     public DateTime Date { get; set; }
 
     /// <summary>
-    /// Список билетов
+    /// Список всех билетов для мероприятия.
     /// </summary>
     public List<Ticket> Tickets { get; set; } = new List<Ticket>();
-    
+
     /// <summary>
-    ///  Доступные билеты
+    /// Доступные для бронирования билеты (статус <c>Free</c>).
     /// </summary>
     [NotMapped]
     public IEnumerable<Ticket> AvailableTickets => Tickets.Where(t => t.BookingStatus == BookingStatus.Free);
 
     /// <summary>
-    /// Забронированные билеты
+    /// Забронированные билеты (статус <c>Booked</c>).
     /// </summary>
     [NotMapped]
     public IEnumerable<Ticket> BookedTickets => Tickets.Where(t => t.BookingStatus == BookingStatus.Booked);
 
     /// <summary>
-    /// Sold out
+    /// Указывает, проданы ли все билеты на мероприятие.
     /// </summary>
     public bool IsSoldOut => Tickets.Any() && AvailableTickets.Count() <= 0;
-
-
 }

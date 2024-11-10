@@ -4,17 +4,32 @@ using Microsoft.AspNetCore.Mvc;
 
 using API.Services;
 
-
+/// <summary>
+/// Контроллер для обработки событий
+/// </summary>
 [Route("api/[controller]")]
 [ApiController]
 public class EventsController : APIBaseController<Event> {
 
     private readonly IEventService _eventService;
+    /// <summary>
+    /// Инициализирует новый экземпляр класса <see cref="EventsController"/> с указанными параметрами.
+    /// </summary>
+    /// <param name="context">Котекст БД</param>
+    /// <param name="logger">Логгер</param>
+    /// <param name="entityService">Сервис для работы с сущностями</param>
     public EventsController(ApplicationDbContext context, ILogger<EventsController> logger, IEventService entityService): base(context, logger, entityService) { 
         _eventService = entityService;
     }
 
-    // Создание события
+    /// <summary>
+    /// Создание нового события
+    /// </summary>
+    /// <param name="eventName">Название события</param>
+    /// <param name="eventDate">Дата события</param>
+    /// <param name="locationId">Id Места проведения события</param>
+    /// <param name="ticketsNumber">Количество билетов, которые будут сгенерены для события</param>
+    /// <returns>Созданное событие</returns>
     [HttpPost("create_event")]
     public async Task<ActionResult<Event>> CreateEvent(string eventName, DateTime eventDate, long locationId, int ticketsNumber) {
         try {
@@ -38,7 +53,7 @@ public class EventsController : APIBaseController<Event> {
     /// <summary>
     /// Получить количество доступных билетов на мероприятие
     /// </summary>
-    /// <param name="eventId"></param>
+    /// <param name="eventId">Id мероприятия</param>
     /// <returns></returns>
     [HttpGet("get_event_available_tickets_count")]
     public async Task<ActionResult<int>> GetEventAvailableTicketCount(long eventId) {

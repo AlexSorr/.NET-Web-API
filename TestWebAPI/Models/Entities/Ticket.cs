@@ -2,30 +2,41 @@ using API.Models.Base;
 
 namespace API.Models;
 
+/// <summary>
+/// Представляет билет на мероприятие.
+/// Наследуется от <see cref="Entity"/>.
+/// </summary>
 public class Ticket : Entity {
 
-    public Ticket () { }
-    
     /// <summary>
-    /// Номер билета
-    /// Надо как-то генерить при создании
+    /// Инициализирует новый экземпляр класса <see cref="Ticket"/>.
+    /// Конструктор по умолчанию.
+    /// </summary>
+    public Ticket () { }
+
+    /// <summary>
+    /// Номер билета.
+    /// Номер генерируется при создании билета.
     /// </summary>
     public string Number { get; set; } = string.Empty;
 
     /// <summary>
-    /// Мероприятие
+    /// Мероприятие, к которому привязан билет.
     /// </summary>
     public Event Event { get; set; } = new Event();
 
     /// <summary>
-    /// Дата мероприятия
+    /// Дата мероприятия.
+    /// Свойство, возвращающее дату события из связанного мероприятия.
     /// </summary>
-    public DateTime? EventDate => this.Event?.Date; 
+    public DateTime? EventDate => this.Event?.Date;
 
-    /// <summary>
-    /// Бронирование и продажа
-    /// </summary>
+    
     private BookingStatus _bookingStatus;
+    /// <summary>
+    /// Статус бронирования и продажи билета.
+    /// В зависимости от статуса обновляются даты бронирования и продажи.
+    /// </summary>
     public BookingStatus BookingStatus { 
         get => _bookingStatus; 
         set {
@@ -48,22 +59,26 @@ public class Ticket : Entity {
     }
 
     /// <summary>
-    /// Дата бронирования
+    /// Дата бронирования билета.
+    /// Применяется, когда билет забронирован.
     /// </summary>
     public DateTime? BookingDate { get; set; }
 
     /// <summary>
-    /// Дата продажи
+    /// Дата продажи билета.
+    /// Применяется, когда билет продан.
     /// </summary>
     public DateTime? SellingDate { get; set; }
-    
+
     /// <summary>
-    /// Зарезервирован
+    /// Проверка, забронирован ли билет.
+    /// Возвращает true, если статус бронирования равен <see cref="BookingStatus.Booked"/>.
     /// </summary>
     public bool IsBooked => this.BookingStatus == BookingStatus.Booked;
 
     /// <summary>
-    /// Продан
+    /// Проверка, продан ли билет.
+    /// Возвращает true, если статус бронирования равен <see cref="BookingStatus.Selled"/>.
     /// </summary>
     public bool IsSelled => this.BookingStatus == BookingStatus.Selled;
 

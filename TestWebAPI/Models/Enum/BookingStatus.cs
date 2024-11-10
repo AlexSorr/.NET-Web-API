@@ -1,12 +1,21 @@
 namespace API.Models;
 
+/// <summary>
+/// Статус бронирования билета.
+/// </summary>
 public enum BookingStatus {
-    //свободен
+    /// <summary>
+    /// Билет доступен для бронирования или продажи.
+    /// </summary>
     Free,
 
-    //Забронирован
+    /// <summary>
+    /// Билет забронирован, но не выкуплен.
+    /// </summary>
     Booked,
 
-    //выкуплен
+    /// <summary>
+    /// Билет выкуплен, статус завершен.
+    /// </summary>
     Selled
 }
