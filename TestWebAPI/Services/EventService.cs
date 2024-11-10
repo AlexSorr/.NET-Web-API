@@ -61,8 +61,8 @@ public class EventService : EntityService<Event>, IEventService {
     /// <param name="number"></param>
     /// <returns></returns>
     private string GenerateTicketNumber(int number, int ticketsCount) {
-        int max_char_length = (ticketsCount + string.Empty).Length;
-        int number_char_length = (number + string.Empty).Length;
+        int max_char_length = ticketsCount.ToString().Length;
+        int number_char_length = number.ToString().Length;
 
         //количество нулей, которые надо добавить вначале
         int zeros_count = max_char_length - number_char_length;
@@ -77,7 +77,7 @@ public class EventService : EntityService<Event>, IEventService {
     /// <param name="location"></param>
     /// <returns></returns>
     private bool LocationExists(long locationId, out Location location) {
-        location = _context.Set<Location>().FirstOrDefault(x => x.Id == locationId);
+        location = _context.Set<Location>().Find(locationId);
         return location != null;
     }
 

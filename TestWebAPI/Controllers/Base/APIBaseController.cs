@@ -1,16 +1,20 @@
+using API.Models.Base;
+using API.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.Base;
 
 [Route("api/[controller]")]
-public abstract class APIBaseController : ControllerBase {
+public abstract class APIBaseController<T> : ControllerBase where T : IEntity {
 
     protected readonly ApplicationDbContext _context;
-    protected readonly ILogger<APIBaseController> _logger;
+    protected readonly ILogger<APIBaseController<T>> _logger;
+    protected readonly IEntityService<T> _entityService;
 
-    protected APIBaseController(ApplicationDbContext context, ILogger<APIBaseController> logger) {
+    protected APIBaseController(ApplicationDbContext context, ILogger<APIBaseController<T>> logger, IEntityService<T> entityService) {
         _context = context;
         _logger = logger;
+        _entityService = entityService;
     }
 
     /// <summary>

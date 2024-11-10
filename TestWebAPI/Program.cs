@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
-using API.Data;
 using API.Services;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -41,44 +40,13 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
         .AddJsonOptions(options => { options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve; });
         
     services.AddEndpointsApiExplorer(); // Добавление эндпоинтов и конфигурации для Swagger
-    services.AddSwaggerGen(c => { //не работает для загрузки файлов, это кал
-        c.OperationFilter<FileUploadOperationFilter>();
-    });
+    services.AddSwaggerGen();
 
     //загрузчик данных
-    services.AddTransient<DataLoader>();
+    //services.AddTransient<DataLoader>();
 
     // Регистрация своиих обобщенных сервисов
     services.AddScoped(typeof(IEntityService<>), typeof(EntityService<>));
     services.AddScoped(typeof(IEventService), typeof(EventService));
 
-}
-
-/// <summary>
-/// Фильтр для загрузки файлов в Swagger !!!Не работает
-/// </summary>
-public class FileUploadOperationFilter : IOperationFilter {
-    public void Apply(OpenApiOperation operation, OperationFilterContext context) {
-        var fileParams = context.MethodInfo
-            .GetParameters()
-            .Where(p => p.ParameterType == typeof(IFormFile) || p.ParameterType == typeof(IFormFileCollection));
-
-        foreach (var param in fileParams) {
-            operation.Parameters.Remove(operation.Parameters.First(p => p.Name == param.Name));
-
-            operation.RequestBody = new OpenApiRequestBody {
-
-                Content = new Dictionary<string, OpenApiMediaType> {
-
-                    ["multipart/form-data"] = new OpenApiMediaType {
-                        Schema = new OpenApiSchema {
-                            Type = "object",
-                            Properties = { [param.Name] = new OpenApiSchema { Type = "string", Format = "binary" } },
-                        }
-                    }
-                }
-            };
-            
-        }
-    }
 }

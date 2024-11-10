@@ -1,6 +1,4 @@
-﻿using System.Text;
-using Microsoft.AspNetCore.Mvc;
-using Event = API.Models.Event;
+﻿using Event = API.Models.Event;
 
 namespace API.Services;
 

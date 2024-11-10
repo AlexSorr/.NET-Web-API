@@ -2,6 +2,10 @@ namespace API.Models.Base;
 
 public interface IEntity {
 
-    long Id { get; }
+    public long Id { get; }
 
+    public DateTime CreationDate { get; }
+
+    public DateTime? ChangeDate { get; set;}
+    
 }

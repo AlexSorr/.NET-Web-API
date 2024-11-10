@@ -1,8 +1,10 @@
-﻿
-using API.Models.Base;
+﻿using System.Linq.Expressions;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
+
+using API.Models.Base;
 
 namespace API.Services;
 
@@ -27,23 +29,28 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
     public async Task SaveAsync(T entity) {
         // отслеживается ли объект контекстом (например, это обновление или новая запись)
         EntityEntry<T> entry = _context.Entry(entity);
+
         // Если объект не отслеживается, это новая сущность, добавляем в контекст
         if (entry.State == EntityState.Detached) 
             await _context.AddAsync(entity);
         // Иначе считаем, что это обновление
-        else
+        else {
             entry.State = EntityState.Modified;
-
+            entity.ChangeDate = DateTime.UtcNow;
+        }
         await _context.SaveChangesAsync();
     }
 
     private const int defaultSavingBatchSize = 1000;
+
     /// <summary>
     /// Пакетно созранить сущности
     /// </summary>
     /// <param name="batch"></param>
     /// <param name="bathcSize"></param>
     /// <returns></returns>
+    public async Task SaveBatchAsync(IEnumerable<T> entities) => await SaveBatchAsync(entities, defaultSavingBatchSize);
+
     public async Task SaveBatchAsync(IEnumerable<T> entities, int batchSize = defaultSavingBatchSize) {
         if (entities == null || !entities.Any()) return;
 
@@ -52,16 +59,15 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
             try {
                 int currentIndex = 0;
                 while (currentIndex < package.Count) {
-                    // Формируем пакет сущностей для добавления
-                    // Все оставшиеся элементы, если их меньше, чем batchSize
+                    // Формируем пакет сущностей для добавления - Все оставшиеся элементы, если их меньше, чем batchSize
                     List<T> batch = package.Skip(currentIndex).Take(batchSize).ToList(); 
                     await _context.AddRangeAsync(batch);  
                     await _context.SaveChangesAsync();  
-                    _context.ChangeTracker.Clear();  // Очищаем трекер изменений
+                    _context.ChangeTracker.Clear();  //Очищаем трекер изменений
 
-                    currentIndex += batch.Count;  // Обновляем индекс для следующего пакета
+                    currentIndex += batch.Count; 
                 }
-                await transaction.CommitAsync();  // Коммитим транзакцию, если все прошло успешно
+                await transaction.CommitAsync();
             } catch {
                 await transaction.RollbackAsync();
                 throw;
@@ -78,12 +84,43 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
         return await _context.Set<T>().FindAsync(id);
     }
 
+
+    /// <summary>
+    /// Загрузить по id
+    /// С параметрами для "жадной" загрузки
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="includes"></param>
+    /// <returns></returns>
+    public async Task<T> LoadByIdWithRelatedDataAsync(long id, params Expression<Func<T, object>>[] includes) {
+        var query = _context.Set<T>().AsQueryable();
+        foreach (var include in includes) 
+            query = query.Include(include);  
+        
+        return await query.FirstOrDefaultAsync(entity => entity.Id == id);  // Загрузим сущность по ID
+    }
+
+
     /// <summary>
     /// Получить все сущности
     /// </summary>
     /// <returns></returns>
-    public async Task<IEnumerable<T>> GetAllAsync() {
+    public async Task<List<T>> GetAllAsync() {
         return await _context.Set<T>().ToListAsync();
+    }
+
+
+    /// <summary>
+    /// Получить все 
+    /// С параметрами для "жадной" загрузки
+    /// </summary>
+    /// <param name="includes"></param>
+    /// <returns></returns>
+    public async Task<List<T>> GetAllWithRelatedDataAsync(params Expression<Func<T, object>>[] includes) {
+        IQueryable<T> query = _context.Set<T>().AsQueryable();
+        foreach (var include in includes) 
+            query = query.Include(include);  // Применяем Include для каждого навигационного свойства
+        return await query.ToListAsync(); 
     }
     
 
@@ -98,6 +135,7 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
         try { await _context.SaveChangesAsync(); } catch { throw; }
     }
 
+
     /// <summary>
     /// Удалить асинхронно
     /// </summary>
@@ -109,6 +147,7 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
             return;
         await DeleteAsync(@entity);
     }
+
 
     /// <summary>
     /// Удалить сущеость асинхронно
@@ -130,6 +169,7 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
     public bool EntityExists(long id) {
         return _context.Set<T>().Find(id) != null;
     }
+
 
     /// <summary>
     /// Сущность есть в БД, возвращает результат

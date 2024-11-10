@@ -1,7 +1,5 @@
-﻿
-
+﻿using System.Linq.Expressions;
 using API.Models.Base;
-using Microsoft.AspNetCore.Mvc;
 
 namespace API.Services;
 
@@ -13,13 +11,15 @@ public interface IEntityService<T> where T : IEntity {
     /// <returns></returns>
     public Task SaveAsync(T entity);
 
+
     /// <summary>
     /// Пакетное сохранение списка сущностей
     /// </summary>
     /// <param name="batch"></param>
     /// <param name="bathcSize"></param>
     /// <returns></returns>
-    public Task SaveBatchAsync(IEnumerable<T> batch, int bathcSize = 1000);
+    public Task SaveBatchAsync(IEnumerable<T> batch);
+
 
     /// <summary>
     /// Поиск по id объекта
@@ -28,13 +28,38 @@ public interface IEntityService<T> where T : IEntity {
     /// <returns></returns>
     public Task<T> LoadByIdAsync(long id);
 
+
+    /// <summary>
+    /// Загрузить с доп. данными
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="includes"></param>
+    /// <returns></returns>
+    public Task<T> LoadByIdWithRelatedDataAsync(long id, params Expression<Func<T, object>>[] includes);
+
+
     /// <summary>
     /// Получить все сущности
     /// </summary>
     /// <returns></returns>
-    public Task<IEnumerable<T>> GetAllAsync();
+    public Task<List<T>> GetAllAsync();
 
+
+    /// <summary>
+    /// Получить все сущности с доп. данными
+    /// </summary>
+    /// <param name="includes"></param>
+    /// <returns></returns>
+    Task<List<T>> GetAllWithRelatedDataAsync(params Expression<Func<T, object>>[] includes);
+
+
+    /// <summary>
+    /// Удалить множество асинхронно
+    /// </summary>
+    /// <param name="entities"></param>
+    /// <returns></returns>
     public Task DeleteRangeAsync(IEnumerable<T> entities);
+
 
     /// <summary>
     /// Удалить асинхронно
@@ -42,6 +67,7 @@ public interface IEntityService<T> where T : IEntity {
     /// <param name="entity">сущность</param>
     /// <returns></returns>
     public Task DeleteAsync(T entity);
+
 
     /// <summary>
     /// Удалить асинхронно
@@ -66,5 +92,6 @@ public interface IEntityService<T> where T : IEntity {
     /// <param name="result"></param>
     /// <returns></returns>
     public bool EntityExists(long id, out T result);
+
 
 }
