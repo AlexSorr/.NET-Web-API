@@ -12,9 +12,7 @@ public abstract class Entity : IEntity {
     /// <summary>
     /// Инициализирует новый экземпляр сущности с установкой даты создания на текущее время.
     /// </summary>
-    public Entity() {
-        CreationDate = DateTime.Now;
-    }
+    public Entity() { }
 
     /// <summary>
     /// Идентификатор сущности. Генерируется автоматически в базе данных.
@@ -26,7 +24,7 @@ public abstract class Entity : IEntity {
     /// <summary>
     /// Дата создания сущности.
     /// </summary>
-    public DateTime CreationDate { get; }
+    public DateTime CreationDate { get; set; } = DateTime.UtcNow;
 
     /// <summary>
     /// Дата последнего изменения сущности. Может быть <c>null</c>, если сущность еще не была изменена.
