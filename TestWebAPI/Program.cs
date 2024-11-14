@@ -6,7 +6,6 @@ using System.Reflection;
 using API.Services.Base;
 using API.Services.EventService;
 using API.Services.Messaging;
-using API.Data.Factories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,7 +40,7 @@ app.Run();
 void ConfigureServices(IServiceCollection services, IConfiguration configuration) {
 
     //Database
-    //services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+    services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
       //  .UseLazyLoadingProxies()); //Включаем для ленивой загрузки виртуальных ICollection, чтобы не тащить много лишних данных сразу
 
     //Controllers
@@ -68,9 +67,8 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
     //Регистрация сервисов в DI
     services.AddScoped(typeof(IEntityService<>), typeof(EntityService<>));
     services.AddScoped(typeof(IEventService), typeof(EventService));
+    services.AddScoped<IEntityServiceFactory, EntityServiceFactory>();
 
     //services.AddSingleton<ApplicationDbContextFactory>();
     services.AddSingleton(typeof(IRabbitMQService), typeof(RabbitMQService));
-    services.AddSingleton(typeof(IEntityServiceFactory), typeof(EntityServiceFactory));
-
 }
