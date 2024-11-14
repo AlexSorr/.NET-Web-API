@@ -66,9 +66,9 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
 
     //Регистрация сервисов в DI
     services.AddScoped(typeof(IEntityService<>), typeof(EntityService<>));
-    services.AddScoped(typeof(IEventService), typeof(EventService));
     services.AddScoped<IEntityServiceFactory, EntityServiceFactory>();
+    services.AddScoped<IEventService, EventService>();
 
     //services.AddSingleton<ApplicationDbContextFactory>();
-    services.AddSingleton(typeof(IRabbitMQService), typeof(RabbitMQService));
+    services.AddSingleton<IRabbitMQService, RabbitMQService>();
 }
