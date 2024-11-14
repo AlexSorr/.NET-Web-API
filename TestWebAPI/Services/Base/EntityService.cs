@@ -48,7 +48,7 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
     /// </summary>
     /// <typeparam name="T1">Тип сущности, для которого необходимо получить сервис. Должен реализовывать <see cref="IEntity"/>.</typeparam>
     /// <returns>Экземпляр <see cref="IEntityService{T1}"/> для работы с указанным типом сущности.</returns>
-    protected IEntityService<T1> GetEntityService<T1>() where T1 : class, IEntity {
+    public IEntityService<T1> GetEntityService<T1>() where T1 : class, IEntity {
         return _serviceFactory.Create<T1>();
     }
 

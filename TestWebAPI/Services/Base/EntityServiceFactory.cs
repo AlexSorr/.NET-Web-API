@@ -22,6 +22,7 @@ public class EntityServiceFactory : IEntityServiceFactory {
     /// <typeparam name="T">Тип сущности, для которого создается сервис. Должен реализовывать <see cref="IEntity"/>.</typeparam>
     /// <returns>Экземпляр <see cref="IEntityService{T}"/> для работы с указанным типом сущности.</returns>
     public IEntityService<T> Create<T>() where T : class, IEntity {
-        return _serviceProvider.GetService<IEntityService<T>>();
+        using (var scope = _serviceProvider.CreateScope()) 
+            return _serviceProvider.GetService<IEntityService<T>>();
     }
 }
