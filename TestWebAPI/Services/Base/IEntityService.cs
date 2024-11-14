@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using API.Models.Base;
 
-namespace API.Services;
+namespace API.Services.Base;
 
 /// <summary>
 /// Интерфейс, определяющий методы для работы с сущностями в базе данных.

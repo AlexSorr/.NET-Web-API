@@ -1,7 +1,7 @@
 using API.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 using API.Models;
-using API.Services;
+using API.Services.Base;
 
 
 /// <summary>
@@ -27,12 +27,11 @@ public class LocationController : APIBaseController<Location> {
     [HttpPost("load_locations")]
     public async Task<IActionResult> UploadLocations([FromBody] IEnumerable<Location> objects) {
         try {
-            // Сохраняем локации в базе данных
             await _entityService.SaveBatchAsync(objects);        
         } catch (Exception ex) { 
-            // Обработка ошибок, если они возникнут
             return HandleError(ex); 
         }
-        return Ok(); // Возвращаем успешный статус
+        return Ok(); 
     }
+    
 }

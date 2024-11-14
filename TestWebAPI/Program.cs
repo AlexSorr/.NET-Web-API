@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
-
-using API.Services;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
+
+using API.Services.Base;
+using API.Services.EventService;
+using API.Services.Messaging;
+using API.Data.Factories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,13 +39,16 @@ app.Run();
 
 // Добавление сервисов
 void ConfigureServices(IServiceCollection services, IConfiguration configuration) {
-    services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+
+    //Database
+    //services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
       //  .UseLazyLoadingProxies()); //Включаем для ленивой загрузки виртуальных ICollection, чтобы не тащить много лишних данных сразу
 
+    //Controllers
     services.AddControllers()
         .AddJsonOptions(options => { options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve; });
-        
+    
+    //UI
     services.AddEndpointsApiExplorer(); // Добавление эндпоинтов и конфигурации для Swagger
     services.AddSwaggerGen(c =>
         {
@@ -60,11 +65,12 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
         }
     );
 
-    //загрузчик данных
-    //services.AddTransient<DataLoader>();
-
-    // Регистрация своиих обобщенных сервисов
+    //Регистрация сервисов в DI
     services.AddScoped(typeof(IEntityService<>), typeof(EntityService<>));
     services.AddScoped(typeof(IEventService), typeof(EventService));
+
+    //services.AddSingleton<ApplicationDbContextFactory>();
+    services.AddSingleton(typeof(IRabbitMQService), typeof(RabbitMQService));
+    services.AddSingleton(typeof(IEntityServiceFactory), typeof(EntityServiceFactory));
 
 }

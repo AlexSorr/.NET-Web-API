@@ -9,3 +9,4 @@ Dockerfile
 .DS_Store
 TestWebAPI/.DS_Store
 TestWebAPI/.editorconfig
+.vscode

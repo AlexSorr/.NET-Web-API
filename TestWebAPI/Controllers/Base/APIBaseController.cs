@@ -1,9 +1,8 @@
 using API.Models.Base;
-using API.Services;
+using API.Services.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.Base;
-
 
 /// <summary>
 /// Базовый контроллер для работы с сущностями. 

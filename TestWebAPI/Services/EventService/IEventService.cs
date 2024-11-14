@@ -1,7 +1,8 @@
 ﻿using System.Linq.Expressions;
+using API.Services.Base;
 using Event = API.Models.Event;
 
-namespace API.Services;
+namespace API.Services.EventService;
 
 /// <summary>
 /// Интерфейс, определяющий методы для работы с сущностями типа <see cref="Event"/>.

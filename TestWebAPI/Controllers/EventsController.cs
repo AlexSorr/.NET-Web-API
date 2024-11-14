@@ -2,7 +2,7 @@ using API.Controllers.Base;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
-using API.Services;
+using API.Services.EventService;
 
 /// <summary>
 /// Контроллер для обработки событий

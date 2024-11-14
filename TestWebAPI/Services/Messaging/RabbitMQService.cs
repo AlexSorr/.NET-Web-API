@@ -3,12 +3,12 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 
-namespace API.Services;
+namespace API.Services.Messaging;
 
 /// <summary>
 /// Сервис для работы с RabbitMQ для отправки и получения данных о бронированиях.
 /// </summary>
-public abstract class RabbitMQService : BackgroundService, IRabbitMQService, IDisposable {
+public class RabbitMQService : BackgroundService, IRabbitMQService, IDisposable {
 
     private readonly IConnection _connection; // Соединение с RabbitMQ
     private readonly IModel _channel; // Канал для обмена сообщениями

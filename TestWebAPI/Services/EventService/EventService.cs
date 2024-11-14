@@ -1,11 +1,15 @@
 ﻿using System.Linq.Expressions;
 using System.Text;
-using API.Models;
 
-namespace API.Services;
+using API.Models;
+using API.Services.Base;
+using BookingStatus = API.Models.Enums.BookingStatus;
+
+
+namespace API.Services.EventService;
 
 /// <summary>
-/// Сервис для работы с событиями
+/// Сервис для работы с событиями.
 /// </summary>
 public class EventService : EntityService<Event>, IEventService {
 
@@ -14,7 +18,9 @@ public class EventService : EntityService<Event>, IEventService {
     /// </summary>
     /// <param name="context">Контекст базы данных.</param>
     /// <param name="logger">Логгер для записи событий.</param>
-    public EventService(ApplicationDbContext context, ILogger<EntityService<Event>> logger) : base(context, logger) { }
+    /// <param name="serviceFactory">Фабрика для создания сервисов работы с сущностями.</param>
+    public EventService(ApplicationDbContext context, ILogger<EntityService<Event>> logger, IEntityServiceFactory serviceFactory) 
+        : base(context, logger, serviceFactory) { }
     
     /// <summary>
     /// Создает новое событие с указанными параметрами.
@@ -26,9 +32,27 @@ public class EventService : EntityService<Event>, IEventService {
     /// <returns>Созданное событие.</returns>
     /// <exception cref="Exception">Выбрасывается при неверных данных события.</exception>
     public async Task<Event> CreateEventAsync(string eventName, DateTime eventDate, long locationId, int ticketsNumber) {
+        Event result = CreateEventIfDataValid(eventName, eventDate, locationId, ticketsNumber);
+        CreateTicketsForEvent(result, ticketsNumber);
+        await SaveAsync(result);
+        return result;
+    }
+
+    /// <summary>
+    /// Проверяет корректность данных события и создает объект события, если данные верны.
+    /// </summary>
+    /// <param name="eventName">Название события.</param>
+    /// <param name="eventDate">Дата события.</param>
+    /// <param name="locationId">Идентификатор места проведения.</param>
+    /// <param name="ticketsNumber">Количество билетов.</param>
+    /// <returns>Созданное событие.</returns>
+    /// <exception cref="Exception">Выбрасывается при некорректных данных события.</exception>
+    private Event CreateEventIfDataValid(string eventName, DateTime eventDate, long locationId, int ticketsNumber) {
         StringBuilder errors = new StringBuilder(); 
+
         if (string.IsNullOrWhiteSpace(eventName))
             errors.Append("Некорректное название события.");
+
         if (eventDate <= DateTime.Now)
             errors.Append("Дата события не может быть меньше текущей.");
 
@@ -43,72 +67,66 @@ public class EventService : EntityService<Event>, IEventService {
             throw new Exception(errors.ToString());
 
         eventDate = DateTime.SpecifyKind(eventDate, DateTimeKind.Utc);
-
-        Event result = new Event() { Name = eventName, Date = eventDate, Location = location };
-        CreateTicketsForEvent(result, ticketsNumber);
-
-        await SaveAsync(result);
-
-        return result;
+        return new Event() { Name = eventName, Date = eventDate, Location = location };
     }
 
     /// <summary>
-    /// Получить все мероприятия
+    /// Получает все мероприятия.
     /// </summary>
-    /// <returns>Полный список событий</returns>
+    /// <returns>Полный список событий.</returns>
     public async Task<List<Event>> GetEventsAsync() {
         return await GetAllAsync();
     }
 
     /// <summary>
-    /// Получить все мероприятия с доп. параметрами для "жадной загрузки"
+    /// Получает все мероприятия с дополнительными параметрами для "жадной загрузки".
     /// </summary>
     /// <param name="eagerLoadingParameters">
-    ///     Выражения с теми свойствами, которые необходимо выгрузить из БД вместе с объектом
-    ///     Для Event например event => event.Tickets осуществит загрузку события со списком билетов к нему
+    ///     Выражения с теми свойствами, которые необходимо загрузить из БД вместе с объектом.
+    ///     Например, для Event `event => event.Tickets` загрузит событие со списком билетов к нему.
     /// </param>
-    /// <returns>Полный список событий с заполненными выбранными свойствами ссылочного типа</returns>
+    /// <returns>Полный список событий с заполненными указанными свойствами ссылочного типа.</returns>
     public async Task<List<Event>> GetEventsAsync(params Expression<Func<Event, object>>[] eagerLoadingParameters) {
         return await GetAllWithRelatedDataAsync(eagerLoadingParameters);
     } 
 
     /// <summary>
-    /// Поиск события по id
+    /// Поиск события по идентификатору.
     /// </summary>
-    /// <param name="id">event_id</param>
+    /// <param name="id">Идентификатор события.</param>
+    /// <returns>Найденное событие или null, если не найдено.</returns>
     public async Task<Event> GetEventAsync(long id) {
         return await LoadByIdAsync(id);
     }
 
     /// <summary>
-    /// Получить количество доступных билетов на мероприятие
+    /// Получает количество доступных билетов на мероприятие.
     /// </summary>
-    /// <param name="eventId">Id мероприятия</param>
-    /// <returns></returns>
+    /// <param name="eventId">Идентификатор мероприятия.</param>
+    /// <returns>Количество доступных билетов.</returns>
     public async Task<int> GetEventAvailableTicketCount(long eventId) {
         Event @event = await LoadByIdWithRelatedDataAsync(eventId, ev => ev.Tickets);
         if (@event == null) {
-            _logger.LogError($"При запросе количества билетов не найдено событие по Id {eventId}");
+            _logger.LogError($"При запросе количества билетов не найдено событие по идентификатору {eventId}");
             return 0;
         }
         return @event.AvailableTickets.Count();
     }
 
     /// <summary>
-    /// Получить все доступные события 
+    /// Получает все доступные события.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Список доступных событий.</returns>
     public async Task<List<Event>> GetAvailableEvents() {
-        List<Event> events = await GetAllAsync(x => x.Date >= DateTime.UtcNow && x.AvailableTickets.Any());
-        return events;
+        return await GetAllAsync(x => x.Date >= DateTime.UtcNow && x.AvailableTickets.Any());
     }
 
     /// <summary>
-    /// Получить список событий на определенную дату 
+    /// Получает список событий на определенную дату.
     /// </summary>
-    /// <param name="date">Дата мероприятия</param>
-    /// <param name="onlyAvailable">Только с доступными к покупке билетами</param>
-    /// <returns></returns>
+    /// <param name="date">Дата мероприятия.</param>
+    /// <param name="onlyAvailable">Фильтр для отображения только событий с доступными билетами.</param>
+    /// <returns>Список событий на указанную дату.</returns>
     public async Task<List<Event>> GetEventsByDate(DateTime date, bool onlyAvailable = false) {
         List<Event> events = await GetAllAsync(ev => ev.Date == date);
         if (events == null || !events.Any()) return new List<Event>();
@@ -136,7 +154,7 @@ public class EventService : EntityService<Event>, IEventService {
     }
     
     /// <summary>
-    /// Генерирует номер билета в формате с лидирующими нулями.
+    /// Генерирует номер билета с лидирующими нулями.
     /// </summary>
     /// <param name="number">Номер билета.</param>
     /// <param name="ticketsCount">Общее количество билетов.</param>
@@ -155,8 +173,7 @@ public class EventService : EntityService<Event>, IEventService {
     /// <param name="location">Локация, если найдена.</param>
     /// <returns>True, если локация найдена; иначе false.</returns>
     private bool LocationExists(long locationId, out Location location) {
-        location = _context.Set<Location>().Find(locationId);
-        return location != null;
+        return GetEntityService<Location>().EntityExists(locationId, out location);
     }
 
     #endregion

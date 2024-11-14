@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 using API.Models.Base;
 
-namespace API.Services;
+namespace API.Services.Base;
 
 /// <summary>
 /// Сервис для работы с сущностями типа <typeparamref name="T"/> в базе данных.
@@ -27,13 +27,29 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
     protected readonly ILogger<EntityService<T>> _logger;
 
     /// <summary>
+    /// Фабрика для создания экземпляров сервисов работы с сущностями.
+    /// </summary>
+    protected readonly IEntityServiceFactory _serviceFactory;
+
+    /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="EntityService{T}"/> с указанными параметрами.
     /// </summary>
     /// <param name="context">Контекст базы данных.</param>
-    /// <param name="logger">Логгер для записи событий.</param>
-    public EntityService(ApplicationDbContext context, ILogger<EntityService<T>> logger) { 
+    /// <param name="logger">Логгер для записи событий и ошибок.</param>
+    /// <param name="serviceFactory">Фабрика для создания экземпляров сервисов работы с сущностями.</param>
+    public EntityService(ApplicationDbContext context, ILogger<EntityService<T>> logger, IEntityServiceFactory serviceFactory) { 
         _context = context; 
         _logger = logger; 
+        _serviceFactory = serviceFactory;
+    }
+
+    /// <summary>
+    /// Получает экземпляр <see cref="IEntityService{T1}"/> для указанного типа сущности с использованием фабрики сервисов.
+    /// </summary>
+    /// <typeparam name="T1">Тип сущности, для которого необходимо получить сервис. Должен реализовывать <see cref="IEntity"/>.</typeparam>
+    /// <returns>Экземпляр <see cref="IEntityService{T1}"/> для работы с указанным типом сущности.</returns>
+    protected IEntityService<T1> GetEntityService<T1>() where T1 : class, IEntity {
+        return _serviceFactory.Create<T1>();
     }
 
     #endregion
@@ -45,7 +61,6 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
     /// <param name="entity">Сущность для сохранения.</param>
     public async Task SaveAsync(T entity) {
         EntityEntry<T> entry = _context.Entry(entity);
-
         if (entry.State == EntityState.Detached) 
             await _context.AddAsync(entity); // Добавление новой сущности
         else {
@@ -80,7 +95,7 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
                     List<T> batch = package.Skip(currentIndex).Take(batchSize).ToList(); 
                     await _context.AddRangeAsync(batch);  
                     await _context.SaveChangesAsync();  
-                    _context.ChangeTracker.Clear();  
+                    _context.ChangeTracker.Clear();  //не положить ли это в finally? Как связан ChangeTracker и Rollback?
 
                     currentIndex += batch.Count; 
                 }
@@ -130,7 +145,6 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
     public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate) {
         return await _context.Set<T>().Where(predicate).ToListAsync();
     }
-
 
     /// <summary>
     /// Возвращает все сущности с включением связанных данных.

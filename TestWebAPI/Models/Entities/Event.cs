@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using API.Models.Base;
+using BookingStatus = API.Models.Enums.BookingStatus;
 
 namespace API.Models;
 

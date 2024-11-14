@@ -1,4 +1,5 @@
 using API.Models.Base;
+using BookingStatus = API.Models.Enums.BookingStatus;
 
 namespace API.Models;
 
@@ -32,7 +33,7 @@ public class Ticket : Entity {
     public DateTime? EventDate => this.Event?.Date;
 
     
-    private BookingStatus _bookingStatus;
+    private BookingStatus _bookingStatus = BookingStatus.Free;
     /// <summary>
     /// Статус бронирования и продажи билета.
     /// В зависимости от статуса обновляются даты бронирования и продажи.

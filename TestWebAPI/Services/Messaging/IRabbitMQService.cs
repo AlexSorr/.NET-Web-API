@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace API.Services;
+﻿namespace API.Services.Messaging;
 
 /// <summary>
 /// Интерфейс для работы с RabbitMQ, предназначенный для отправки и получения сообщений.
