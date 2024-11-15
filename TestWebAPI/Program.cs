@@ -15,6 +15,7 @@ Action<HostBuilderContext, IServiceProvider, LoggerConfiguration> configureLoggi
     if (string.IsNullOrWhiteSpace(logFilePath))
         return;
     configuration.WriteTo.Console().WriteTo.File(path: logFilePath, rollingInterval: RollingInterval.Day); 
+    configuration.MinimumLevel.Debug();
 };
 builder.Host.UseSerilog(configureLogging);
 

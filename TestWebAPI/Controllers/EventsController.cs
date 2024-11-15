@@ -29,9 +29,9 @@ public class EventsController : APIBaseController<Event> {
     /// <param name="eventDate">Дата события</param>
     /// <param name="locationId">Id Места проведения события</param>
     /// <param name="ticketsNumber">Количество билетов, которые будут сгенерены для события</param>
-    /// <returns>Созданное событие</returns>
+    /// <returns>Id созданного события</returns>
     [HttpPost("create_event")]
-    public async Task<ActionResult<Event>> CreateEvent(string eventName, DateTime eventDate, long locationId, int ticketsNumber) {
+    public async Task<ActionResult<long>> CreateEvent(string eventName, DateTime eventDate, long locationId, int ticketsNumber) {
         try {
             return Ok(await _eventService.CreateEventAsync(eventName, eventDate, locationId, ticketsNumber));
         } catch (Exception ex) {

@@ -17,8 +17,8 @@ public interface IEventService : IEntityService<Event> {
     /// <param name="eventDate">Дата мероприятия.</param>
     /// <param name="locationId">Идентификатор локации, где будет проходить мероприятие.</param>
     /// <param name="ticketsNumber">Количество билетов, которое необходимо создать для мероприятия.</param>
-    /// <returns>Задача, которая возвращает созданное мероприятие.</returns>
-    Task<Event> CreateEventAsync(string eventName, DateTime eventDate, long locationId, int ticketsNumber);
+    /// <returns>Задача, которая возвращает созданное id созданного мероприятия.</returns>
+    Task<long> CreateEventAsync(string eventName, DateTime eventDate, long locationId, int ticketsNumber);
 
     /// <summary>
     /// Получить все мероприятия

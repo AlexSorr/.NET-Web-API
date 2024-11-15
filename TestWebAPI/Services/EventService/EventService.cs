@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Text;
 
 using API.Models;
@@ -31,11 +32,16 @@ public class EventService : EntityService<Event>, IEventService {
     /// <param name="ticketsNumber">Количество билетов.</param>
     /// <returns>Созданное событие.</returns>
     /// <exception cref="Exception">Выбрасывается при неверных данных события.</exception>
-    public async Task<Event> CreateEventAsync(string eventName, DateTime eventDate, long locationId, int ticketsNumber) {
+    public async Task<long> CreateEventAsync(string eventName, DateTime eventDate, long locationId, int ticketsNumber) {
+        // Stopwatch sw = new Stopwatch();
+        // _logger.LogDebug($"Начало создания билетов, количество билетов {ticketsNumber}");
+        // sw.Start();
         Event result = CreateEventIfDataValid(eventName, eventDate, locationId, ticketsNumber);
         CreateTicketsForEvent(result, ticketsNumber);
-        await SaveAsync(result);
-        return result;
+        try { await SaveAsync(result); } catch { throw; }
+        // sw.Stop();
+        // _logger.LogDebug($"Сущности созданы и сохранены в БД за {sw.Elapsed}");
+        return result.Id;
     }
 
     /// <summary>
