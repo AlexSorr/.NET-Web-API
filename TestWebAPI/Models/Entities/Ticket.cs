@@ -7,7 +7,7 @@ namespace API.Models;
 /// Представляет билет на мероприятие.
 /// Наследуется от <see cref="Entity"/>.
 /// </summary>
-public class Ticket : Entity {
+public class Ticket : Entity, IParsableEntity<Ticket> {
 
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="Ticket"/>.
@@ -82,5 +82,16 @@ public class Ticket : Entity {
     /// Возвращает true, если статус бронирования равен <see cref="BookingStatus.Selled"/>.
     /// </summary>
     public bool IsSelled => this.BookingStatus == BookingStatus.Selled;
+
+    /// <inheritdoc/>
+    public static Ticket Parse(object? @object) {
+        return @object as Ticket;
+    }
+
+    /// <inheritdoc/>
+    public static bool TryParse(object? @object, out Ticket? result) {
+        result = @object as Ticket;
+        return result != null;
+    }
 
 }

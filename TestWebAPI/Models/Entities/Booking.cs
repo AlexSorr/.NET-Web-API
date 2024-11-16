@@ -6,7 +6,7 @@ namespace API.Models;
 /// Представляет бронирование для мероприятия, включая информацию о количестве забронированных билетов и дате бронирования.
 /// Наследуется от <see cref="Entity"/>.
 /// </summary>
-public class Booking : Entity {
+public class Booking : Entity, IParsableEntity<Booking> {
 
     /// <summary>
     /// Мероприятие, для которого было произведено бронирование.
@@ -22,4 +22,15 @@ public class Booking : Entity {
     /// Дата и время, когда было произведено бронирование.
     /// </summary>
     public DateTime BookingDate { get; set; }
+
+    /// <inheritdoc/>
+    public static Booking Parse(object? @object) {
+        return @object as Booking;
+    }
+
+    /// <inheritdoc/>
+    public static bool TryParse(object? @object, out Booking? result) {
+        result = @object as Booking;
+        return result != null;
+    }
 }

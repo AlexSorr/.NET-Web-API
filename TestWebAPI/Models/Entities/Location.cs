@@ -6,7 +6,7 @@ namespace API.Models;
 /// Представляет локацию для мероприятия.
 /// Наследуется от <see cref="Entity"/>.
 /// </summary>
-public class Location : Entity {
+public class Location : Entity, IParsableEntity<Location> {
 
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="Location"/>.
@@ -23,4 +23,15 @@ public class Location : Entity {
     /// Адрес локации.
     /// </summary>
     public string Address { get; set; } = string.Empty;
+
+     /// <inheritdoc/>
+    public static Location Parse(object? @object) {
+        return @object as Location;
+    }
+
+    /// <inheritdoc/>
+    public static bool TryParse(object? @object, out Location? result) {
+        result = @object as Location;
+        return result != null;
+    }
 }

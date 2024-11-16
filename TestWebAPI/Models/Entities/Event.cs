@@ -7,7 +7,7 @@ namespace API.Models;
 /// <summary>
 /// Представляет событие в системе, включая его название, локацию, дату и билеты.
 /// </summary>
-public class Event : Entity {
+public class Event : Entity, IParsableEntity<Event> {
 
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="Event"/>.
@@ -51,4 +51,15 @@ public class Event : Entity {
     /// Указывает, проданы ли все билеты на мероприятие.
     /// </summary>
     public bool IsSoldOut => Tickets.Any() && AvailableTickets.Count() <= 0;
+
+    /// <inheritdoc/>
+    public static Event Parse(object? @object) {
+        return @object as Event;
+    }
+    
+    /// <inheritdoc/>
+    public static bool TryParse(object? @object, out Event? result) {
+        result = @object as Event;
+        return result != null;
+    }
 }
