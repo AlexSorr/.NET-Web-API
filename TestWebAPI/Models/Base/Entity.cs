@@ -37,8 +37,9 @@ public abstract class Entity : IEntity {
     /// <param name="obj">Объект для сравнения</param>
     /// <returns>Возвращает <c>true</c>, если объекты идентичны по типу и идентификатору.</returns>
     public override bool Equals(object? obj) {
-        if (obj == null || this.GetType() != obj.GetType()) return false;
-        return this.Id == ((Entity)obj).Id;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj == null || GetType() != obj.GetType()) return false;
+        return Id == ((Entity)obj).Id;
     }
 
     /// <summary>
