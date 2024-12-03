@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using API.Models;
 using System.Reflection;
-using API.Models.Base;
+
+using dNetAPI.Models.Base;
 
 /// <summary>
 /// Контекст базы данных для работы с сущностями.
@@ -21,25 +21,8 @@ public class ApplicationDbContext : DbContext {
         _logger = logger; 
     }
 
-    /// <summary>
-    /// Таблица событий.
-    /// </summary>
-    public DbSet<Event> Events { get; set; }
-
-    /// <summary>
-    /// Таблица бронирований.
-    /// </summary>
-    public DbSet<Booking> Bookings { get; set; }
-
-    /// <summary>
-    /// Таблица локаций.
-    /// </summary>
-    public DbSet<Location> Locations { get; set; }
-
-    /// <summary>
-    /// Таблица билетов.
-    /// </summary>
-    public DbSet<Ticket> Tickets { get; set; }
+    //Конфиг модели
+    #region ModelConfig
 
     /// <summary>
     /// Настраивает параметры модели и устанавливает конфигурацию БД.
@@ -51,28 +34,6 @@ public class ApplicationDbContext : DbContext {
         ApplyEntityKeyConfiguration(modelBuilder);
         ApplyForeignKeyConfiguration(modelBuilder);
         SetDbObjectNamesLowerInvariantCase(modelBuilder);
-    }
-
-    /// <summary>
-    /// Настраивает первичные ключи для всех сущностей, реализующих интерфейс <see cref="IEntity"/>.
-    /// </summary>
-    /// <param name="modelBuilder">Построитель модели для настройки сущностей.</param>
-    private void ApplyEntityKeyConfiguration(ModelBuilder modelBuilder) {
-        IEnumerable<Type> types = Assembly.GetExecutingAssembly().GetTypes()
-            .Where(t => typeof(IEntity).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
-        foreach (Type type in types) 
-            modelBuilder.Entity(type).HasKey("Id");
-    }
-
-    /// <summary>
-    /// Настраивает параметры внешних ключей, включая связь "событие-билет".
-    /// </summary>
-    /// <param name="modelBuilder">Построитель модели для настройки сущностей.</param>
-    private void ApplyForeignKeyConfiguration(ModelBuilder modelBuilder) {
-        modelBuilder.Entity<Event>().HasMany(e => e.Tickets)
-            .WithOne(t => t.Event)
-            .HasForeignKey("EventId")
-            .OnDelete(DeleteBehavior.Cascade);
     }
 
     /// <summary>
@@ -93,4 +54,43 @@ public class ApplicationDbContext : DbContext {
                 property.SetColumnName(property.Name.ToLowerInvariant());
         }
     }
+
+    #endregion
+
+    //Сущности, хранящиеся в БД
+    #region DbSets
+
+    //public DbSet<> Set { get; set; }
+
+    #endregion
+
+    //настройка связей между объектами
+    #region PrimaryForeignKeysConfig
+
+    /// <summary>
+    /// Настраивает первичные ключи для всех сущностей, реализующих интерфейс <see cref="IEntity"/>.
+    /// </summary>
+    /// <param name="modelBuilder">Построитель модели для настройки сущностей.</param>
+    private void ApplyEntityKeyConfiguration(ModelBuilder modelBuilder) {
+        IEnumerable<Type> types = Assembly.GetExecutingAssembly().GetTypes()
+            .Where(t => typeof(IEntity).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+        foreach (Type type in types) 
+            modelBuilder.Entity(type).HasKey("Id");
+    }
+
+    /// <summary>
+    /// Настраивает параметры внешних ключей
+    /// </summary>
+    /// <param name="modelBuilder">Построитель модели для настройки сущностей.</param>
+    private void ApplyForeignKeyConfiguration(ModelBuilder modelBuilder) {
+        #region tmp
+        // modelBuilder.Entity<Event>().HasMany(e => e.Tickets)
+        //     .WithOne(t => t.Event)
+        //     .HasForeignKey("EventId")
+        //     .OnDelete(DeleteBehavior.Cascade);
+        #endregion
+    }
+
+    #endregion
+
 }

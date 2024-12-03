@@ -1,11 +1,12 @@
-﻿using IEntity = API.Models.Base.IEntity;
+﻿using IEntity = dNetAPI.Models.Base.IEntity;
     
-namespace API.Services.Base;
+namespace dNetAPI.Services.Base;
 
 /// <summary>
 /// Фабрика для создания экземпляров <see cref="IEntityService{T}"/> с использованием DI-контейнера.
 /// </summary>
 public class EntityServiceFactory : IEntityServiceFactory {
+    
     private readonly IServiceProvider _serviceProvider;
 
     /// <summary>
@@ -16,13 +17,10 @@ public class EntityServiceFactory : IEntityServiceFactory {
         _serviceProvider = serviceProvider;
     }
 
-    /// <summary>
-    /// Создает экземпляр <see cref="IEntityService{T}"/> для заданного типа сущности.
-    /// </summary>
-    /// <typeparam name="T">Тип сущности, для которого создается сервис. Должен реализовывать <see cref="IEntity"/>.</typeparam>
-    /// <returns>Экземпляр <see cref="IEntityService{T}"/> для работы с указанным типом сущности.</returns>
+    /// <inheritdoc/>
     public IEntityService<T> Create<T>() where T : class, IEntity {
         using (var scope = _serviceProvider.CreateScope()) 
             return _serviceProvider.GetService<IEntityService<T>>();
     }
+
 }

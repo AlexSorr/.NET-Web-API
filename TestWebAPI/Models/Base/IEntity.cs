@@ -1,4 +1,4 @@
-namespace API.Models.Base;
+namespace dNetAPI.Models.Base;
 
 /// <summary>
 /// Интерфейс, который должны реализовывать все сущности в приложении.

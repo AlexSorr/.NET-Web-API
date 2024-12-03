@@ -1,20 +1,15 @@
-using API.Models.Base;
-using API.Services.Base;
+using dNetAPI.Models.Base;
+using dNetAPI.Services.Base;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers.Base;
+namespace dNetAPI.Controllers.Base;
 
 /// <summary>
-/// Базовый контроллер для работы с сущностями. 
-/// Все контроллеры, работающие с сущностями, должны наследоваться от этого класса.
+/// Базовый контроллер для работы с сущностями типа <typeparamref name="T"/>.
 /// </summary>
+/// <typeparam name="T">Тип сущности, с которой работает контроллер. Должен реализовывать интерфейс <see cref="IEntity"/>.</typeparam>
 [Route("api/[controller]")]
 public abstract class APIBaseController<T> : ControllerBase where T : IEntity {
-
-    /// <summary>
-    /// Контекст базы данных для доступа к данным.
-    /// </summary>
-    protected readonly ApplicationDbContext _context;
 
     /// <summary>
     /// Логгер для логирования ошибок и других событий в контроллере.
@@ -29,14 +24,54 @@ public abstract class APIBaseController<T> : ControllerBase where T : IEntity {
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="APIBaseController{T}"/> с указанными параметрами.
     /// </summary>
-    /// <param name="context">Контекст базы данных</param>
     /// <param name="logger">Логгер для логирования событий</param>
     /// <param name="entityService">Сервис для работы с сущностями</param>
-    protected APIBaseController(ApplicationDbContext context, ILogger<APIBaseController<T>> logger, IEntityService<T> entityService) {
-        _context = context;
+    protected APIBaseController(ILogger<APIBaseController<T>> logger, IEntityService<T> entityService) {
         _logger = logger;
         _entityService = entityService;
     }
+
+    #region Get
+
+    /// <summary>
+    /// Поиск по id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>Id</returns>
+    [HttpGet("get_id_{id}")]
+    public async Task<ActionResult<long>> GetById(long id) => NotFound();
+    
+    #endregion
+
+    #region Post
+
+    /// <summary>
+    /// Создание новой сущности
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost("create_new")]
+    public async Task<ActionResult> Create() => NoContent();
+
+    #endregion
+
+    #region Delete
+
+    /// <summary>
+    /// Удаление по id
+    /// </summary>
+    /// <param name="id">Id</param>
+    [HttpDelete("delete_id_{id}")]
+    public async Task<IActionResult> Delete(long id) => NoContent();
+
+    
+    #endregion
+
+    #region Put
+
+    [HttpPut("put_id_{id}")]
+    public async Task<ActionResult> Put() => NoContent();
+
+    #endregion
 
     /// <summary>
     /// Обрабатывает ошибки, возникающие в дочерних контроллерах, и возвращает соответствующий ответ.

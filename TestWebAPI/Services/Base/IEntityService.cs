@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
-using API.Models.Base;
+using dNetAPI.Models.Base;
 
-namespace API.Services.Base;
+namespace dNetAPI.Services.Base;
 
 /// <summary>
 /// Интерфейс, определяющий методы для работы с сущностями в базе данных.
@@ -10,9 +10,30 @@ namespace API.Services.Base;
 public interface IEntityService<T> where T : IEntity {
 
     /// <summary>
+    /// Получить сущность <typeparamref name="T"/> по Id
+    /// </summary>
+    /// <param name="id">Идентификатор сущности</param>
+    /// <returns>Найденная сущность или <c>null</c></returns>
+    public T LoadById(long id);
+
+    /// <summary>
+    /// Загружает сущность по её идентификатору.
+    /// </summary>
+    /// <param name="id">Идентификатор сущности.</param>
+    /// <returns>Задача, которая возвращает найденную сущность или <c>null</c>, если сущность не найдена.</returns>
+    public Task<T> LoadByIdAsync(long id);
+
+    /// <summary>
+    /// Найти сущности <typeparamref name="T"/> по запросу асинхронно
+    /// </summary>
+    /// <param name="predicate">Запрос для поиска</param>
+    /// <returns>Множество сущностей, удовлетворяющих запросу</returns>
+    public Task<List<T>> FindAsync(Expression<Func<T, bool>> predicate); 
+
+    /// <summary>
     /// Создает или обновляет сущность и сохраняет её в базе данных.
     /// </summary>
-    /// <param name="entity">Сущность для сохранения или обновления в базе данных.</param>
+    /// <param name="entity">Сущность <typeparamref name="T"/> для сохранения или обновления в базе данных.</param>
     /// <returns>Задача, представляющая асинхронную операцию сохранения.</returns>
     public Task SaveAsync(T entity);
 
@@ -24,39 +45,12 @@ public interface IEntityService<T> where T : IEntity {
     public Task SaveBatchAsync(IEnumerable<T> batch);
 
     /// <summary>
-    /// Загружает сущность по её идентификатору.
+    /// Пакетно сохраняет список сущностей в базе данных.
     /// </summary>
-    /// <param name="id">Идентификатор сущности.</param>
-    /// <returns>Задача, которая возвращает найденную сущность или null, если сущность не найдена.</returns>
-    public Task<T> LoadByIdAsync(long id);
-
-    /// <summary>
-    /// Загружает сущность по идентификатору с включением дополнительных связанных данных.
-    /// </summary>
-    /// <param name="id">Идентификатор сущности.</param>
-    /// <param name="includes">Выражения для включения дополнительных связанных данных в запрос.</param>
-    /// <returns>Задача, которая возвращает найденную сущность с включёнными связанными данными или null, если сущность не найдена.</returns>
-    public Task<T> LoadByIdWithRelatedDataAsync(long id, params Expression<Func<T, object>>[] includes);
-
-    /// <summary>
-    /// Загружает все сущности указанного типа из базы данных.
-    /// </summary>
-    /// <returns>Задача, которая возвращает список всех сущностей.</returns>
-    public Task<List<T>> GetAllAsync();
-
-    /// <summary>
-    /// Возвращает все сущности данного типа, отфильтрованные по выражению.
-    /// </summary>
-    /// <param name="predicate">Выражение для фильтрации сущностей.</param>
-    /// <returns>Список отфильтрованных сущностей.</returns>
-    Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate);
-
-    /// <summary>
-    /// Загружает все сущности с включением дополнительных связанных данных.
-    /// </summary>
-    /// <param name="includes">Выражения для включения связанных данных в запрос.</param>
-    /// <returns>Задача, которая возвращает список всех сущностей с включёнными связанными данными.</returns>
-    public Task<List<T>> GetAllWithRelatedDataAsync(params Expression<Func<T, object>>[] includes);
+    /// <param name="batch">Коллекция сущностей для пакетного сохранения.</param>
+    /// <param name="batchSize">Объем сущностей, сохраняемых за одну транзакцию.</param>
+    /// <returns>Задача, представляющая асинхронную операцию пакетного сохранения.</returns>
+    public Task SaveBatchAsync(IEnumerable<T> batch, int batchSize);
 
     /// <summary>
     /// Удаляет несколько сущностей из базы данных асинхронно.
@@ -93,4 +87,5 @@ public interface IEntityService<T> where T : IEntity {
     /// <param name="result">Сущность, найденная по идентификатору (если она существует).</param>
     /// <returns>Возвращает true, если сущность существует, иначе false.</returns>
     public bool EntityExists(long id, out T result);
+
 }

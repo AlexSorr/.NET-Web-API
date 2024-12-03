@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace API.Models.Base;
+namespace dNetAPI.Models.Base;
 
 /// <summary>
 /// Абстрактный класс, реализующий интерфейс <see cref="IEntity"/>. 
@@ -14,21 +14,15 @@ public abstract class Entity : IEntity {
     /// </summary>
     public Entity() { }
 
-    /// <summary>
-    /// Идентификатор сущности. Генерируется автоматически в базе данных.
-    /// </summary>
+    /// <inheritdoc/>
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public long Id { get; }
-
-    /// <summary>
-    /// Дата создания сущности.
-    /// </summary>
+    
+    /// <inheritdoc/>
     public DateTime CreationDate { get; set; } = DateTime.UtcNow;
 
-    /// <summary>
-    /// Дата последнего изменения сущности. Может быть <c>null</c>, если сущность еще не была изменена.
-    /// </summary>
+    /// <inheritdoc/>
     public DateTime? ChangeDate { get; set; }
 
     /// <summary>

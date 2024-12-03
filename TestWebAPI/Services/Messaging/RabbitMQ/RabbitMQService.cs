@@ -1,13 +1,8 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
-namespace API.Services.Messaging;
+namespace dNetAPI.Services.Messaging;
 
 /// <summary>
 /// Сервис для работы с RabbitMQ для отправки и получения сообщений о создании событий.
@@ -46,47 +41,32 @@ public class RabbitMQService : BackgroundService, IRabbitMQService, IDisposable 
                               arguments: null);
     }
 
-    /// <summary>
-    /// Инициализирует соединение с RabbitMQ и настраивает очередь.
-    /// </summary>
-    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <inheritdoc/>
     public async Task InitializeAsync(CancellationToken cancellationToken) {
         // Дополнительная логика инициализации, если требуется
         await Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Регистрирует обработчик для обработки входящих сообщений.
-    /// </summary>
-    /// <param name="onMessageReceived">Функция, которая обрабатывает входящее сообщение и возвращает результат обработки.</param>
+    /// <inheritdoc/>
     public void RegisterMessageReceiver(Func<string, Task<string>> onMessageReceived) {
         _onMessageReceived = onMessageReceived ?? throw new ArgumentNullException(nameof(onMessageReceived), "Message handler cannot be null.");
     }
 
-    /// <summary>
-    /// Отправляет сообщение в очередь RabbitMQ.
-    /// </summary>
-    /// <param name="message">Сообщение для отправки в очередь.</param>
+    /// <inheritdoc/>
     public async Task SendMessageAsync(string message) {
         var messageBody = Encoding.UTF8.GetBytes(message);
         _channel.BasicPublish(exchange: "", routingKey: _queueName, basicProperties: null, body: messageBody);
         await Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Отправляет ответное сообщение после обработки входящего сообщения.
-    /// </summary>
-    /// <param name="responseMessage">Сообщение с результатом обработки.</param>
+    /// <inheritdoc/>
     public async Task SendResponseAsync(string responseMessage) {
         var messageBody = Encoding.UTF8.GetBytes(responseMessage);
         _channel.BasicPublish(exchange: "", routingKey: _queueName, basicProperties: null, body: messageBody);
         await Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Запускает фоновую задачу для прослушивания очереди и обработки сообщений.
-    /// </summary>
-    /// <param name="stoppingToken">Токен отмены операции.</param>
+    /// <inheritdoc/>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
         var consumer = new EventingBasicConsumer(_channel);
         consumer.Received += async (sender, args) => {
@@ -106,9 +86,7 @@ public class RabbitMQService : BackgroundService, IRabbitMQService, IDisposable 
         await Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Завершает работу с RabbitMQ, закрывая соединение и освобождая ресурсы.
-    /// </summary>
+    /// <inheritdoc/>
     public async Task ShutdownAsync(CancellationToken cancellationToken) {
         _channel.Close();
         _connection.Close();

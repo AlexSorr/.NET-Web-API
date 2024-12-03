@@ -1,4 +1,4 @@
-﻿namespace API.Services.Messaging;
+﻿namespace dNetAPI.Services.Messaging;
 
 /// <summary>
 /// Интерфейс для работы с RabbitMQ, предназначенный для отправки и получения сообщений о событиях.
