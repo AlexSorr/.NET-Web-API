@@ -1,12 +1,4 @@
-TestWebAPI/bin/
-TestWebAPI/obj/
-TestWebAPI/.vs/
-TestWebAPI/Migrations/
-TestWebAPI/Logs/
-
-
-Dockerfile
-.DS_Store
-TestWebAPI/.DS_Store
-TestWebAPI/.editorconfig
-.vscode
+/API Base/bin/
+/API Base/obj/
+/API Base/Migrations/
+/API Base/Logs/
