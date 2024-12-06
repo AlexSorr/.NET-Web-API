@@ -31,6 +31,7 @@ public abstract class APIBaseController<T> : ControllerBase where T : IEntity {
         _entityService = entityService;
     }
 
+    //Методы для обработки запросов, здесь ради примера, использовать в наследниках
     #region Get
 
     /// <summary>

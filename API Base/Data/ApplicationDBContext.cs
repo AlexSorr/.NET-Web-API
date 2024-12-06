@@ -42,7 +42,6 @@ public class ApplicationDbContext : DbContext {
     /// <param name="modelBuilder">Построитель модели для настройки сущностей.</param>
     private void SetDbObjectNamesLowerInvariantCase(ModelBuilder modelBuilder) {
         foreach (IMutableEntityType entity in modelBuilder.Model.GetEntityTypes()) {
-
             string tableName = entity.GetTableName() ?? string.Empty;
             if (string.IsNullOrWhiteSpace(tableName)) {
                 _logger.LogError($"Table name for entity {entity.GetType()} not found");

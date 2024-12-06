@@ -78,11 +78,12 @@ public class EntityService<T> : IEntityService<T> where T : class, IEntity {
     /// <inheritdoc/>
     public async Task SaveAsync(T entity) {
         EntityEntry<T> entry = _context.Entry(entity);
-        if (entry.State == EntityState.Detached) 
+        if (entry.State == EntityState.Detached) {
+            entity.CreationDate = DateTime.UtcNow;
             await EntitySet.AddAsync(entity);
-        else {
+        } else {
+            entity.ChangeDate = DateTime.UtcNow;
             entry.State = EntityState.Modified;
-            entity.ChangeDate = DateTime.UtcNow; // Обновление сущности
         }
         await _context.SaveChangesAsync();
     }

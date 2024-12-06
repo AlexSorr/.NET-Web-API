@@ -48,7 +48,6 @@ void ConfigureLogging(WebApplicationBuilder builder) {
     builder.Host.UseSerilog(configureLogging);
 }
 
-// Добавление сервисов
 void ConfigureApp(IServiceCollection services, IConfiguration configuration) {
     services.ApplyDatabaseContext(configuration);
     services.ConfigureControllers();

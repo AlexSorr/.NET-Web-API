@@ -14,7 +14,7 @@ public interface IEntity {
     /// <summary>
     /// Дата создания сущности.
     /// </summary>
-    DateTime CreationDate { get; }
+    DateTime CreationDate { get; set; }
 
     /// <summary>
     /// Дата последнего изменения сущности. Может быть <c>null</c>, если сущность еще не была изменена.
